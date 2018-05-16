@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { LineChart, Line } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
 import './App.css';
 
 const APP_NAME = 'AtoZ VISUALIZER';
@@ -23,11 +23,37 @@ const testData = [
   {key: 'H', down: 410, up: 420},
 ];
 
-function TestChart({data}) {
+function setupData(data) {
+  const defaultExt = {
+    press: 0,
+    prevDown: 0,
+    prevUp: 0,
+    downDiff: 0,
+    upDiff: 0
+  };
+  return data.map((d, i) => {
+    const ext = Object.assign({}, d, defaultExt);
+    ext.press = d.up - d.down;
+    if (i > 0) {
+      ext.prevDown = data[i - 1].down;
+      ext.prevUp = data[i - 1].up;
+      ext.downDiff = d.down - ext.prevDown;
+      ext.upDiff = d.up - ext.prevUp;
+    }
+    return ext;
+  });
+}
+
+function TimelineChart({data}) {
   return (
-    <LineChart width={400} height={400} data={data}>
-      <Line type="monotone" dataKey="down" stroke="#8884d8" />
-    </LineChart>
+    <BarChart data={setupData(data)} layout="vertical" width={1000} height={400} barCategoryGap="4">
+      <YAxis type="category" dataKey="key" axisLine={false} tickLine={false} />
+      <XAxis type="number" allowDecimals={false} tickCount="20" />
+      <CartesianGrid horizontal={false} stroke="#ccc" strokeDasharray="5 5" />
+      <Bar dataKey="prevDown" stackId="a" fill="transparent" isAnimationActive={false} />
+      <Bar dataKey="downDiff" stackId="a" label={{ fill: 'white', fontSize: 9}} fill="darkslategray" stroke="darkslategray" isAnimationActive={false} />
+      <Bar dataKey="press" stackId="a" label={{ fill: 'gray', fontSize: 9}} fill="transparent" stroke="darkslategray" isAnimationActive={false} />
+    </BarChart>
   );
 }
 
@@ -36,7 +62,8 @@ class App extends Component {
     return (
       <div className="App">
         <Header title={APP_NAME} />
-        <TestChart data={testData} />
+        <h2 className="Chart-title">Timeline</h2>
+        <TimelineChart data={testData} />
       </div>
     );
   }

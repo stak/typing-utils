@@ -25,3 +25,11 @@
   margin: -20px 0;
   padding: 0;
 }
+
+.Chart-title {
+  text-align: left;
+  margin: 0;
+  padding: 1em 0 0 1em;
+  color: darkslategray;
+  border-top: 1px solid darkslategray;
+}
