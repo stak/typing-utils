@@ -72,7 +72,7 @@ export function statsData(data) {
   });
 }
 
-export function mapColor(colors, min, max, value) {
+export function mapColor({colors, min, max}, value) {
   const rgbaColors = colors.map(c => parseColor(c).rgba);
 
   let p;

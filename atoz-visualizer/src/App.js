@@ -29,46 +29,46 @@ function ChartExample({data}) {
           <h3>bg</h3>
           <h4>(Monochrome, score.kpm)</h4>
           <Chart.Heatmap data={data} type="bg" dataKey="score.kpm"
-                  mapper={Chart.mapColor.bind(null, ['darkslategray', 'white'], 30, 70)}/>
+                         colors={['darkslategray', 'white']} min="30" max="70" />
           <h4>(Monochrome, delta)</h4>
           <Chart.Heatmap data={data} type="bg" dataKey="delta"
-                  mapper={Chart.mapColor.bind(null, ['white', 'darkslategray'], 0, 100)}/>
+                         colors={['white', 'darkslategray']} min="0" max="100" />
           <h4>(Excel-style, score.kpm)</h4>
           <Chart.Heatmap data={data} type="bg" dataKey="score.kpm"
-                  mapper={Chart.mapColor.bind(null, ['lightpink', 'white', 'lightblue'], 30, 70)}/>
+                         colors={['lightpink', 'white', 'lightblue']} min="30" max="70" />
           <h4>(Excel-style, delta)</h4>
           <Chart.Heatmap data={data} type="bg" dataKey="delta"
-                  mapper={Chart.mapColor.bind(null, ['lightblue', 'white', 'lightpink'], 0, 100)}/>
+                         colors={['lightblue', 'white', 'lightpink']} min="0" max="100" />
         </div>
         <div>
           <h3>fg</h3>
           <h4>(Monochrome, score.kpm)</h4>
           <Chart.Heatmap data={data} type="fg" dataKey="score.kpm"
-                  mapper={Chart.mapColor.bind(null, ['darkslategray', 'darkgray'], 30, 70)}/>
+                         colors={['darkslategray', 'darkgray']} min="30" max="70" />
           <h4>(Monochrome, delta)</h4>
           <Chart.Heatmap data={data} type="fg" dataKey="delta"
-                  mapper={Chart.mapColor.bind(null, ['darkgray', 'darkslategray'], 0, 100)}/>
+                         colors={['darkgray', 'darkslategray']} min="0" max="100" />
           <h4>(Excel-style, score.kpm)</h4>
           <Chart.Heatmap data={data} type="fg" dataKey="score.kpm"
-                  mapper={Chart.mapColor.bind(null, ['lightpink', 'darkgray', 'lightblue'], 30, 70)}/>
+                         colors={['lightpink', 'darkgray', 'lightblue']} min="30" max="70" />
           <h4>(Excel-style, delta)</h4>
           <Chart.Heatmap data={data} type="fg" dataKey="delta"
-                  mapper={Chart.mapColor.bind(null, ['lightblue', 'darkgray', 'lightpink'], 0, 100)}/>
+                         colors={['lightblue', 'darkgray', 'lightpink']} min="0" max="100" />
         </div>
         <div>
           <h3>border</h3>
           <h4>(Monochrome, score.kpm)</h4>
           <Chart.Heatmap data={data} type="border" dataKey="score.kpm"
-                  mapper={Chart.mapColor.bind(null, ['darkslategray', 'darkgray'], 30, 70)}/>
+                         colors={['darkslategray', 'darkgray']} min="30" max="70" />
           <h4>(Monochrome, delta)</h4>
           <Chart.Heatmap data={data} type="border" dataKey="delta"
-                  mapper={Chart.mapColor.bind(null, ['darkgray', 'darkslategray'], 0, 100)}/>
+                         colors={['darkgray', 'darkslategray']} min="0" max="100" />
           <h4>(Excel-style, score.kpm)</h4>
           <Chart.Heatmap data={data} type="border" dataKey="score.kpm"
-                  mapper={Chart.mapColor.bind(null, ['lightpink', 'darkgray', 'lightblue'], 30, 70)}/>
+                         colors={['lightpink', 'darkgray', 'lightblue']} min="30" max="70" />
           <h4>(Excel-style, delta)</h4>
           <Chart.Heatmap data={data} type="border" dataKey="delta"
-                  mapper={Chart.mapColor.bind(null, ['lightblue', 'darkgray', 'lightpink'], 0, 100)}/>
+                         colors={['lightblue', 'darkgray', 'lightpink']} min="0" max="100" />
         </div>
       </div>
     </div>

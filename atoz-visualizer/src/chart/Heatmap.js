@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {setupData, statsData} from './util';
+import {setupData, statsData, mapColor} from './util';
 
 function HeatmapCharBG(props) {
   const color = props.mapper(props.data);
@@ -42,6 +42,12 @@ export class Heatmap extends Component {
     border: HeatmapCharBorder,
   }
 
+  defaultMapParams = {
+    min: 0,
+    max: 100,
+    colors: ['white', 'gray']
+  }
+
   defaultStyle = {
     fontSize: '30px',
     padding: '6px 6px',
@@ -75,13 +81,18 @@ export class Heatmap extends Component {
     }
     const getData = this.getByKeyString.bind(this, this.props.dataKey);
 
+    const mapParams = {...this.defaultMapParams, ...this.props};
+    const mapper = this.props.mapper ?
+                   this.props.mapper :
+                   mapColor.bind(null, mapParams);
+
     return (
       <div>
         {
           data.map(d =>
             <CharComponent key={d.key} text={d.key} style={style}
                            data={getData(d)}
-                           mapper={this.props.mapper} />
+                           mapper={mapper} />
           )
         }
       </div>
