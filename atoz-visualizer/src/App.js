@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, LabelList } from 'recharts';
 import parseColor from 'parse-color';
 import './App.css';
 
@@ -265,6 +265,38 @@ class Heatmap extends Component {
   }
 }
 
+class StackBarLabel extends Component {
+  render() {
+    const x = this.props.x;
+    const y = this.props.y;
+    const width = this.props.width;
+    const height = this.props.height;
+    const text = this.props.value;
+    return (
+      <text x={x} y={y - 2} width={width} height={height} fill="darkslategray" fontSize="16" className="recharts-text recharts-label" textAnchor="middle">
+        <tspan x={x} dx={width / 2} dy={height / 2 + 5} fontSize="10">{text}</tspan>
+      </text>
+    );
+  }
+}
+
+function StackBarChart(props) {
+  const data = props.data;
+  return (
+    <BarChart data={setupData(data)} layout="horizontal" width={1000} height={400} barCategoryGap="4">
+      <YAxis type="number" axisLine={false} allowDecimals={false} tickCount={10} />
+      <XAxis type="category" dataKey="key" tickLine={false} />
+      <CartesianGrid vertical={false} stroke="#ccc" strokeDasharray="5 5" />
+      <Bar dataKey="delta" stackId="a" fill="darkslategray" stroke="darkslategray" isAnimationActive={false}>
+        <LabelList dataKey="delta" position="center" fill="white" fontSize="9" />
+      </Bar>
+      <Bar dataKey="press" stackId="a" fill="transparent" stroke="darkslategray" isAnimationActive={false}>
+        <LabelList dataKey="press" position="center" fill="darkslategray" fontSize="9" />
+      </Bar>
+    </BarChart>
+  );
+}
+
 class App extends Component {
   render() {
     return (
@@ -274,9 +306,11 @@ class App extends Component {
         <GanttChart data={testData} />
         <h2 className="Chart-title">Timeline</h2>
         <TimelineChart data={testData} />
+        <h2 className="Chart-title">StackBar</h2>
+        <StackBarChart data={testData} />
         <h2 className="Chart-title">Heatmap</h2>
-        <div class="Heatmap-container">
-          <div class="left">
+        <div className="Heatmap-container">
+          <div>
             <h3>(bg, Monochrome, score.kpm)</h3>
             <Heatmap data={testData} type="bg" dataKey="score.kpm"
                     mapper={mapColor.bind(null, ['darkslategray', 'white'], 30, 70)}/>
@@ -290,7 +324,7 @@ class App extends Component {
             <Heatmap data={testData} type="bg" dataKey="delta"
                     mapper={mapColor.bind(null, ['lightblue', 'white', 'lightpink'], 0, 100)}/>
           </div>
-          <div class="center">
+          <div>
             <h3>(fg, Monochrome, score.kpm)</h3>
             <Heatmap data={testData} type="fg" dataKey="score.kpm"
                     mapper={mapColor.bind(null, ['darkslategray', 'darkgray'], 30, 70)}/>
@@ -304,7 +338,7 @@ class App extends Component {
             <Heatmap data={testData} type="fg" dataKey="delta"
                     mapper={mapColor.bind(null, ['lightblue', 'darkgray', 'lightpink'], 0, 100)}/>
           </div>
-          <div class="right">
+          <div>
             <h3>(border, Monochrome, score.kpm)</h3>
             <Heatmap data={testData} type="border" dataKey="score.kpm"
                     mapper={mapColor.bind(null, ['darkslategray', 'darkgray'], 30, 70)}/>
