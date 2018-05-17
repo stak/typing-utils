@@ -110,19 +110,23 @@ function GanttChart({data}) {
   );
 }
 
-class TimelineLabel extends Component {
+class TimelineTopLabel extends Component {
   render() {
+    const defaultStyle = {
+      fontSize: '16',
+      fill: 'darkslategray'
+    };
+    const propStyle = this.props.style || {};
+    const style = {...defaultStyle, ...propStyle};
     const x = this.props.x;
     const y = this.props.y;
     const width = this.props.width;
     const height = this.props.height;
-    const text = this.props.content.props.text ? this.props.content.props.text : '';
-    const name = this.props.content.props.name;
+    const name = this.props.name;
 
     return (
-      <text x={x} y={y - 2} width={width} height={height} fill="darkslategray" fontSize="16" className="recharts-text recharts-label" textAnchor="middle">
+      <text x={x} y={y - 2} width={width} height={height} fill={style.fill} fontSize={style.fontSize} className="recharts-text recharts-label" textAnchor="middle">
         <tspan x={x} dx={width} dy="0">{name}</tspan>
-        <tspan x={x} dx={width / 2} dy={height / 2 + 5} fontSize="10">{text}</tspan>
       </text>
     );
   }
@@ -134,6 +138,7 @@ function TimelineChart({data}) {
     prev[current.key] = current.delta;
     return prev;
   }, {});
+  const accessor = (k, d) => d[k] ? d[k] : '';
 
   return (
     <BarChart data={[flatData]} layout="vertical" width={1000} height={100} barCategoryGap="4" margin={{top: 15, right: 5, bottom: 5, left: 64}}>
@@ -142,9 +147,13 @@ function TimelineChart({data}) {
       <CartesianGrid horizontal={false} stroke="#ccc" strokeDasharray="5 5" />
       {
         // TODO: 色
-        data.map(d => <Bar key={d.key} dataKey={d.key} stackId="a"
-                           label={<TimelineLabel name={d.key} text={flatData[d.key]} />}
-                           fill="transparent" stroke="darkslategray" isAnimationActive={false} />)
+        data.map(d => (
+          <Bar key={d.key} dataKey={d.key} stackId="a"
+               fill="transparent" stroke="darkslategray" isAnimationActive={false}>
+            <LabelList valueAccessor={accessor.bind(null, d.key)} position="center" fill="darkslategray" fontSize="9" />
+            <LabelList content={<TimelineTopLabel />} name={d.key} />
+          </Bar>
+        ))
       }
     </BarChart>
   );
@@ -261,21 +270,6 @@ class Heatmap extends Component {
           )
         }
       </div>
-    );
-  }
-}
-
-class StackBarLabel extends Component {
-  render() {
-    const x = this.props.x;
-    const y = this.props.y;
-    const width = this.props.width;
-    const height = this.props.height;
-    const text = this.props.value;
-    return (
-      <text x={x} y={y - 2} width={width} height={height} fill="darkslategray" fontSize="16" className="recharts-text recharts-label" textAnchor="middle">
-        <tspan x={x} dx={width / 2} dy={height / 2 + 5} fontSize="10">{text}</tspan>
-      </text>
     );
   }
 }
