@@ -275,45 +275,50 @@ class App extends Component {
         <h2 className="Chart-title">Timeline</h2>
         <TimelineChart data={testData} />
         <h2 className="Chart-title">Heatmap</h2>
-        <h3>(bg, Monochrome, score.kpm)</h3>
-        <Heatmap data={testData} type="bg" dataKey="score.kpm"
-                 mapper={mapColor.bind(null, ['darkslategray', 'white'], 30, 70)}/>
-        <h3>(bg, Excel-style, score.kpm)</h3>
-        <Heatmap data={testData} type="bg" dataKey="score.kpm"
-                 mapper={mapColor.bind(null, ['lightpink', 'white', 'lightblue'], 30, 70)}/>
-        <h3>(bg, Monochrome, delta)</h3>
-        <Heatmap data={testData} type="bg" dataKey="delta"
-                 mapper={mapColor.bind(null, ['white', 'darkslategray'], 0, 100)}/>
-        <h3>(bg, Excel-style, delta)</h3>
-        <Heatmap data={testData} type="bg" dataKey="delta"
-                 mapper={mapColor.bind(null, ['lightblue', 'white', 'lightpink'], 0, 100)}/>
-
-        <h3>(fg, Monochrome, score.kpm)</h3>
-        <Heatmap data={testData} type="fg" dataKey="score.kpm"
-                 mapper={mapColor.bind(null, ['darkslategray', 'darkgray'], 30, 70)}/>
-        <h3>(fg, Excel-style, score.kpm)</h3>
-        <Heatmap data={testData} type="fg" dataKey="score.kpm"
-                 mapper={mapColor.bind(null, ['lightpink', 'darkgray', 'lightblue'], 30, 70)}/>
-        <h3>(fg, Monochrome, delta)</h3>
-        <Heatmap data={testData} type="fg" dataKey="delta"
-                 mapper={mapColor.bind(null, ['darkgray', 'darkslategray'], 0, 100)}/>
-        <h3>(fg, Excel-style, delta)</h3>
-        <Heatmap data={testData} type="fg" dataKey="delta"
-                 mapper={mapColor.bind(null, ['lightblue', 'darkgray', 'lightpink'], 0, 100)}/>
-
-
-        <h3>(border, Monochrome, score.kpm)</h3>
-        <Heatmap data={testData} type="border" dataKey="score.kpm"
-                 mapper={mapColor.bind(null, ['darkslategray', 'darkgray'], 30, 70)}/>
-        <h3>(border, Excel-style, score.kpm)</h3>
-        <Heatmap data={testData} type="border" dataKey="score.kpm"
-                 mapper={mapColor.bind(null, ['lightpink', 'darkgray', 'lightblue'], 30, 70)}/>
-        <h3>(border, Monochrome, delta)</h3>
-        <Heatmap data={testData} type="border" dataKey="delta"
-                 mapper={mapColor.bind(null, ['darkgray', 'darkslategray'], 0, 100)}/>
-        <h3>(border, Excel-style, delta)</h3>
-        <Heatmap data={testData} type="border" dataKey="delta"
-                 mapper={mapColor.bind(null, ['lightblue', 'darkgray', 'lightpink'], 0, 100)}/>
+        <div class="Heatmap-container">
+          <div class="left">
+            <h3>(bg, Monochrome, score.kpm)</h3>
+            <Heatmap data={testData} type="bg" dataKey="score.kpm"
+                    mapper={mapColor.bind(null, ['darkslategray', 'white'], 30, 70)}/>
+            <h3>(bg, Monochrome, delta)</h3>
+            <Heatmap data={testData} type="bg" dataKey="delta"
+                    mapper={mapColor.bind(null, ['white', 'darkslategray'], 0, 100)}/>
+            <h3>(bg, Excel-style, score.kpm)</h3>
+            <Heatmap data={testData} type="bg" dataKey="score.kpm"
+                    mapper={mapColor.bind(null, ['lightpink', 'white', 'lightblue'], 30, 70)}/>
+            <h3>(bg, Excel-style, delta)</h3>
+            <Heatmap data={testData} type="bg" dataKey="delta"
+                    mapper={mapColor.bind(null, ['lightblue', 'white', 'lightpink'], 0, 100)}/>
+          </div>
+          <div class="center">
+            <h3>(fg, Monochrome, score.kpm)</h3>
+            <Heatmap data={testData} type="fg" dataKey="score.kpm"
+                    mapper={mapColor.bind(null, ['darkslategray', 'darkgray'], 30, 70)}/>
+            <h3>(fg, Monochrome, delta)</h3>
+            <Heatmap data={testData} type="fg" dataKey="delta"
+                    mapper={mapColor.bind(null, ['darkgray', 'darkslategray'], 0, 100)}/>
+            <h3>(fg, Excel-style, score.kpm)</h3>
+            <Heatmap data={testData} type="fg" dataKey="score.kpm"
+                    mapper={mapColor.bind(null, ['lightpink', 'darkgray', 'lightblue'], 30, 70)}/>
+            <h3>(fg, Excel-style, delta)</h3>
+            <Heatmap data={testData} type="fg" dataKey="delta"
+                    mapper={mapColor.bind(null, ['lightblue', 'darkgray', 'lightpink'], 0, 100)}/>
+          </div>
+          <div class="right">
+            <h3>(border, Monochrome, score.kpm)</h3>
+            <Heatmap data={testData} type="border" dataKey="score.kpm"
+                    mapper={mapColor.bind(null, ['darkslategray', 'darkgray'], 30, 70)}/>
+            <h3>(border, Monochrome, delta)</h3>
+            <Heatmap data={testData} type="border" dataKey="delta"
+                    mapper={mapColor.bind(null, ['darkgray', 'darkslategray'], 0, 100)}/>
+            <h3>(border, Excel-style, score.kpm)</h3>
+            <Heatmap data={testData} type="border" dataKey="score.kpm"
+                    mapper={mapColor.bind(null, ['lightpink', 'darkgray', 'lightblue'], 30, 70)}/>
+            <h3>(border, Excel-style, delta)</h3>
+            <Heatmap data={testData} type="border" dataKey="delta"
+                    mapper={mapColor.bind(null, ['lightblue', 'darkgray', 'lightpink'], 0, 100)}/>
+          </div>
+        </div>
       </div>
     );
   }

@@ -3,16 +3,21 @@
 }
 
 .App-header {
+  position: sticky;
+  top: 0;
+  left: 0;
   background-color: darkslategray;
   padding: 0 30px;
   color: white;
-  height: 62px;
+  height: 42px;
+  overflow: hidden;
+  z-index: 1;
 }
 
 .App-header::after {
   content: '';
   position: absolute;
-  top: 18px;
+  top: 20px;
   left: 0;
   width: 600px;
   display: block;
@@ -23,9 +28,9 @@
 .App-title::before {
   content: '';
   position: absolute;
-  top: -20px;
-  left: 50%;
-  width: 100%;
+  top: 0px;
+  left: 120%;
+  width: 300%;
   height: 64px;
   transform-origin: left top;
   transform: skewX(-30deg);
@@ -34,8 +39,11 @@
 }
 
 .App-title {
+  position: absolute;
+  top: -20px;
+  left: 0;
   font-size: 3.5em;
-  margin: -20px 0;
+  margin: 0;
   padding: 0;
 }
 
@@ -45,4 +53,11 @@
   padding: 1em 0 0 1em;
   color: darkslategray;
   border-top: 1px solid darkslategray;
+}
+
+.Heatmap-container {
+  display: flex;
+}
+.Heatmap-container > div {
+  width: 400px;
 }
