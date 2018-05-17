@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
+import parseColor from 'parse-color';
 import './App.css';
 
 const APP_NAME = 'AtoZ VISUALIZER';
@@ -61,6 +62,7 @@ function statsData(data) {
   const cache = {};
 
   for (let k of statKeys) {
+      // TODO: A の無意味なデータを除外したい
       cache[k] = data.map(d => d[k])
                      .sort(((a, b) => Number(a) - Number(b)));
       const avg = average(cache[k]);
@@ -80,13 +82,14 @@ function statsData(data) {
       rank: {},
       percentile: {}
     };
+    const fix = (n) => Number(n.toFixed(3));
 
     for (let k of statKeys) {
-      ext.score[k] = standardScore(d[k], stats[k].average, stats[k].sd);
+      ext.score[k] = fix(standardScore(d[k], stats[k].average, stats[k].sd));
       ext.rank[k] = cache[k].findIndex(e => e === d[k]);
-      ext.percentile[k] = data.length > 1 ?
-                        100 * ext.rank[k] / (data.length - 1):
-                        0;
+      ext.percentile[k] = fix(data.length > 1 ?
+                              100 * ext.rank[k] / (data.length - 1):
+                              0);
     }
 
     return {...d, ...ext};
@@ -147,15 +150,114 @@ function TimelineChart({data}) {
   );
 }
 
+function mapColor(colors, min, max, value) {
+  const rgbaColors = colors.map(c => parseColor(c).rgba);
+
+  let p;
+  if (min < value && value < max) {
+    p = (value - min) / (max - min);
+  } else if (value <= min) {
+    p = 0;
+  } else if (value >= max) {
+    p = 0.999;
+  }
+
+  // p = 0, range = 0.5 => [0, 1], 0
+  // p = 0.2, range = 0.5 => [0, 1], 0.4
+  // p = 0.5 range = 0.5 => [1, 2], 0
+  // p = 0.9 range = 0.5 => [1, 2], 0.8
+  // p = 1.0 range = 0.5 => [2, 3], 0
+  const colorRange = 1 / (rgbaColors.length - 1);
+  const colorIndex = Math.floor(p / colorRange);
+  const colorFrom = rgbaColors[colorIndex];
+  const colorTo = rgbaColors[colorIndex + 1];
+  const colorP = (p - colorIndex * colorRange) * (rgbaColors.length - 1);
+  const color = colorFrom.map((c, i) => c * (1 - colorP) + colorTo[i] * colorP);
+
+  return `rgba(${color.join(',')})`;
+}
+
+function HeatmapCharBG(props) {
+  const color = props.mapper(props.data);
+  const style = {
+    ...props.style,
+    backgroundColor: color
+  };
+  return (
+    <span style={style} title={props.data}>{props.text}</span>
+  );
+}
+
+function HeatmapCharFG(props) {
+  const color = props.mapper(props.data);
+  const style = {
+    ...props.style,
+    color: color
+  };
+  return (
+    <span style={style} title={props.data}>{props.text}</span>
+  );
+}
+
+function HeatmapCharBorder(props) {
+  const color = props.mapper(props.data);
+  const style = {
+    ...props.style,
+    paddingBottom: 0,
+    borderBottom: '8px solid ' + color // TODO: use props
+  };
+  return (
+    <span style={style} title={props.data}>{props.text}</span>
+  );
+}
+
 class Heatmap extends Component {
+  static typeToComponent = {
+    bg: HeatmapCharBG,
+    fg: HeatmapCharFG,
+    border: HeatmapCharBorder,
+  }
+
+  defaultStyle = {
+    fontSize: '30px',
+    padding: '6px 6px',
+  }
+
+  getByKeyString(keyString, d) {
+    let current = d;
+    const keys = keyString.split('.');
+    for (let k of keys) {
+      if (k in current) {
+        current = current[k];
+      } else {
+        throw new Error(`dataKey "${keyString}" is not found`);
+      }
+    }
+    return current;
+  }
+
   render() {
     const data = statsData(setupData(this.props.data));
-    console.dir(data);
+    const style = {
+      ...this.defaultStyle,
+      ...this.props.style
+    };
+    const CharComponent = Heatmap.typeToComponent[this.props.type];
+    if (!CharComponent) {
+      throw new Error(`Heatmap: unknown type "${this.props.type}" is specified`);
+    }
+    if (!this.props.dataKey) {
+      throw new Error(`Heatmap: prop dataKey is not specified`);
+    }
+    const getData = this.getByKeyString.bind(this, this.props.dataKey);
+
     return (
       <div>
         {
           data.map(d => 
-            <span key={d.key} style={{fontSize: d.percentile.kpm}}>{d.key}</span>
+            <CharComponent key={d.key} text={d.key} style={style}
+                           data={getData(d)}
+                           mapper={this.props.mapper} />
           )
         }
       </div>
@@ -173,7 +275,45 @@ class App extends Component {
         <h2 className="Chart-title">Timeline</h2>
         <TimelineChart data={testData} />
         <h2 className="Chart-title">Heatmap</h2>
-        <Heatmap data={testData} />
+        <h3>(bg, Monochrome, score.kpm)</h3>
+        <Heatmap data={testData} type="bg" dataKey="score.kpm"
+                 mapper={mapColor.bind(null, ['darkslategray', 'white'], 30, 70)}/>
+        <h3>(bg, Excel-style, score.kpm)</h3>
+        <Heatmap data={testData} type="bg" dataKey="score.kpm"
+                 mapper={mapColor.bind(null, ['lightpink', 'white', 'lightblue'], 30, 70)}/>
+        <h3>(bg, Monochrome, delta)</h3>
+        <Heatmap data={testData} type="bg" dataKey="delta"
+                 mapper={mapColor.bind(null, ['white', 'darkslategray'], 0, 100)}/>
+        <h3>(bg, Excel-style, delta)</h3>
+        <Heatmap data={testData} type="bg" dataKey="delta"
+                 mapper={mapColor.bind(null, ['lightblue', 'white', 'lightpink'], 0, 100)}/>
+
+        <h3>(fg, Monochrome, score.kpm)</h3>
+        <Heatmap data={testData} type="fg" dataKey="score.kpm"
+                 mapper={mapColor.bind(null, ['darkslategray', 'darkgray'], 30, 70)}/>
+        <h3>(fg, Excel-style, score.kpm)</h3>
+        <Heatmap data={testData} type="fg" dataKey="score.kpm"
+                 mapper={mapColor.bind(null, ['lightpink', 'darkgray', 'lightblue'], 30, 70)}/>
+        <h3>(fg, Monochrome, delta)</h3>
+        <Heatmap data={testData} type="fg" dataKey="delta"
+                 mapper={mapColor.bind(null, ['darkgray', 'darkslategray'], 0, 100)}/>
+        <h3>(fg, Excel-style, delta)</h3>
+        <Heatmap data={testData} type="fg" dataKey="delta"
+                 mapper={mapColor.bind(null, ['lightblue', 'darkgray', 'lightpink'], 0, 100)}/>
+
+
+        <h3>(border, Monochrome, score.kpm)</h3>
+        <Heatmap data={testData} type="border" dataKey="score.kpm"
+                 mapper={mapColor.bind(null, ['darkslategray', 'darkgray'], 30, 70)}/>
+        <h3>(border, Excel-style, score.kpm)</h3>
+        <Heatmap data={testData} type="border" dataKey="score.kpm"
+                 mapper={mapColor.bind(null, ['lightpink', 'darkgray', 'lightblue'], 30, 70)}/>
+        <h3>(border, Monochrome, delta)</h3>
+        <Heatmap data={testData} type="border" dataKey="delta"
+                 mapper={mapColor.bind(null, ['darkgray', 'darkslategray'], 0, 100)}/>
+        <h3>(border, Excel-style, delta)</h3>
+        <Heatmap data={testData} type="border" dataKey="delta"
+                 mapper={mapColor.bind(null, ['lightblue', 'darkgray', 'lightpink'], 0, 100)}/>
       </div>
     );
   }
