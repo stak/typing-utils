@@ -50,13 +50,14 @@
 .Chart-title {
   text-align: left;
   margin: 0;
-  padding: 1em 0 0 1em;
+  padding: .7em 0 .3em 1em;
   color: darkslategray;
   border-top: 1px solid darkslategray;
 }
 
 .Heatmap-container {
   display: flex;
+  padding: 0 40px;
 }
 .Heatmap-container > div {
   width: 400px;
