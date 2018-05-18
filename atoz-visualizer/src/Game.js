@@ -74,12 +74,11 @@ export class Game extends Component {
 
   updateKeyDown = (pos) => {
     const t = Date.now();
-
     if (pos === 0) {
       this.startTime = t;
     }
 
-    this.setState((prev, props) => ({
+    const makeNewState = (prev, props) => ({
       pos: prev.pos + 1,
       data: prev.data.map((d, i) =>
         i !== pos ? d : {
@@ -88,20 +87,25 @@ export class Game extends Component {
           up: t - this.startTime
         }
       )
-    }));
+    });
+
+    this.setState(makeNewState);
+    return makeNewState(this.state, this.props);
   }
 
   updateKeyUp = (pos) => {
     const t = Date.now();
-
-    this.setState((prev, props) => ({
+    const makeNewState = (prev, props) => ({
       data: prev.data.map((d, i) =>
         i !== pos ? d : {
           ...d,
           up: t - this.startTime
         }
       )
-    }));
+    });
+
+    this.setState(makeNewState);
+    return makeNewState(this.state, this.props);
   }
 
   onClick = (e) => {
@@ -126,13 +130,13 @@ export class Game extends Component {
     if (this.handleSpecialKeys(key)) return;
 
     if (key === word[pos]) {
-      typeSound.play();
-      this.updateKeyDown(pos);
-
-      this.props.onDataChanged(this.state.data);
+      const { data } = this.updateKeyDown(pos);
+      this.props.onDataChanged(data, false);
 
       // cache pos for handling keyUp
       this.pressingKeysToPos[key] = pos;
+
+      typeSound.play();
     } else {
       // typo
       missSound.play();
@@ -142,9 +146,9 @@ export class Game extends Component {
   onKeyUp = (e) => {
     if (e.key in this.pressingKeysToPos) {
       const pos = this.pressingKeysToPos[e.key];
-      this.updateKeyUp(pos);
+      const { data } = this.updateKeyUp(pos);
 
-      this.props.onDataChanged(this.state.data);
+      this.props.onDataChanged(data, pos === data.length - 1);
       delete this.pressingKeysToPos[e.key];
     }
     e.preventDefault();

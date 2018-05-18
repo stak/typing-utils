@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Chart from './chart';
 import { Game } from './Game';
+import { ResultList } from './ResultList';
 import './App.css';
 
 import testData from './testData.json';
@@ -96,22 +97,27 @@ class App extends Component {
     super(props);
 
     this.state = {
-      data: []
+      currentData: [],
+      results: []
     };
   }
-  onDataChanged = (data) => {
-    this.setState({
-      data
-    });
+  onDataChanged = (data, completed) => {
+    this.setState((prev, props) => ({
+      currentData: data,
+      results: completed ?
+               prev.results.concat([data]):
+               prev.results
+    }));
   }
   render() {
-    // <ChartExample data={this.state.data} />
+    // <ChartExample data={testData} />
     return (
       <div className="App">
         <Header title={APP_NAME} />
         <Game word={words.atoz} onDataChanged={this.onDataChanged} />
+        <ResultList results={this.state.results} />
         <h2 className="Chart-title">Timeline</h2>
-        <Chart.TimelineChart data={this.state.data} />
+        <Chart.TimelineChart data={this.state.currentData} />
       </div>
     );
   }
