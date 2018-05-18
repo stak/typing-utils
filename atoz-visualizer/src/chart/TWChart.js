@@ -72,7 +72,9 @@ export class TWChart extends Component {
   render() {
     const data = setupData(this.props.data);
     const dataWithKpm = kpmData(data);
-    const totalKpm = dataWithKpm[dataWithKpm.length - 1].kpm;
+    const totalKpm = dataWithKpm.length ?
+                     dataWithKpm[dataWithKpm.length - 1].kpm:
+                     0;
 
     const itemStyle = {
       margin: 0,

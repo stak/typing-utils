@@ -19,7 +19,9 @@ export function setupData(data) {
       ext.prevDown = prev.down;
       ext.prevUp = prev.up;
       ext.delta = d.down - prev.down;
-      ext.speed = Math.round(60 * 1000 / ext.delta);
+      ext.speed = ext.delta > 0 ?
+                  Math.round(60 * 1000 / ext.delta):
+                  9999;
     }
     return {...d, ...defaultExt, ...ext};
   });
@@ -47,11 +49,15 @@ export function kpmData(data) {
       const ellapsed = data[i].down - data[i - range + 1].prevDown;
 
       // moving kpm
-      ext['kpm' + range] = Math.round(60 * 1000 * range / ellapsed);
+      ext['kpm' + range] = ellapsed > 0 ?
+                           Math.round(60 * 1000 * range / ellapsed):
+                           9999;
     }
     if (i > 0) {
       // total kpm
-      ext.kpm = Math.round(60 * 1000 * i / data[i].down);
+      ext.kpm = data[i].down > 0 ?
+                Math.round(60 * 1000 * i / data[i].down):
+                9999;
     }
     return {...d, ...ext};
   });
@@ -63,7 +69,11 @@ function average(array) {
 }
 
 function standardScore(n, avg, sd) {
-  return 50 + 10 * (n - avg) / sd;
+  if (sd !== 0)  {
+    return 50 + 10 * (n - avg) / sd;
+  } else {
+    return 50;
+  }
 }
 
 export function statsData(data) {
