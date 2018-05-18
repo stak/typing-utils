@@ -27,19 +27,24 @@ export class Game extends Component {
     this.state = {
       isPlaying: false,
       pos: 0,
-      data: this.props.word.split('').map(k => ({
-        key: k,
-        down: 0,
-        up: 0
-      }))
+      data: this.initialData(),
     };
+  }
+
+  initialData = () => {
+    return this.props.word.split('').map(k => ({
+      key: k,
+      down: 0,
+      up: 0
+    }));
   }
 
   reset = () => {
     this.pressingKeysToPos = {};
     this.startTime = 0;
     this.setState({
-      pos: 0
+      pos: 0,
+      data: this.initialData(),
     });
   }
 
@@ -50,6 +55,7 @@ export class Game extends Component {
         this.reset();
         return true;
       default:
+        break;
     }
     return false;
   }
@@ -87,18 +93,14 @@ export class Game extends Component {
   }
 
   onClick = (e) => {
-    console.log('click');
     this.eventElement.focus();
   }
 
   onFocus = (e) => {
-    console.log('focus');
-    this.reset();
     this.setState({isPlaying: true});
   }
 
   onBlur = (e) => {
-    console.log('blur');
     this.setState({isPlaying: false});
   }
 
@@ -114,6 +116,8 @@ export class Game extends Component {
     if (key === word[pos]) {
       this.updateKeyDown(pos);
 
+      this.props.onDataChanged(this.state.data);
+
       // cache pos for handling keyUp
       this.pressingKeysToPos[key] = pos;
     } else {
@@ -126,15 +130,10 @@ export class Game extends Component {
       const pos = this.pressingKeysToPos[e.key];
       this.updateKeyUp(pos);
 
+      this.props.onDataChanged(this.state.data);
       delete this.pressingKeysToPos[e.key];
     }
     e.preventDefault();
-  }
-
-  componentDidUpdate() {
-    if (this.state.pos === this.props.word.length) {
-      console.log(this.state.data);
-    }
   }
 
   render() {
