@@ -1,0 +1,25 @@
+
+.Game {
+    margin: 20px;
+}
+
+.GameView {
+    padding: 0 .2em;
+    font-size: 32pt;
+    font-family: Monaco, "Lucida Console", monospace;
+    border: 2px solid darkslategray;
+}
+.GameView .note {
+    color: gray;
+}
+.GameView .past {
+    color: whitesmoke;
+}
+.GameView .rest {
+    color: darkslategray;
+}
+
+.eventElement {
+    position: absolute;
+    opacity: 0;
+}

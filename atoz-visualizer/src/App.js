@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import Chart from './chart';
+import { Game } from './Game';
 import './App.css';
 
 import testData from './testData.json';
 
 const APP_NAME = 'AtoZ VISUALIZER';
+const words = {
+  atoz: 'abcdefghijklmnopqrstuvwxyz'
+};
 
 function Header({title}) {
   return (
@@ -87,6 +91,7 @@ class App extends Component {
     return (
       <div className="App">
         <Header title={APP_NAME} />
+        <Game word={words.atoz} />
         <ChartExample data={testData} />
       </div>
     );
