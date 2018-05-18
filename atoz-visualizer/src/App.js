@@ -18,7 +18,7 @@ function ChartExample({data}) {
   return (
     <div>
       <h2 className="Chart-title">Diff</h2>
-      <Chart.DiffBarChart data={data} refKpm="1000" />
+      <Chart.DiffChart data={data} refKpm="1000" />
       <h2 className="Chart-title">TW</h2>
       <h3 className="Chart-subtitle">Clone style</h3>
       <Chart.TWChart data={data} useRank={true} kpmRange="5" tickCount={3} />
