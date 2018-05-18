@@ -15,12 +15,28 @@ export function setupData(data) {
     const ext = {};
     ext.press = d.up - d.down;
     if (i > 0) {
-      ext.prevDown = data[i - 1].down;
-      ext.prevUp = data[i - 1].up;
-      ext.delta = d.down - ext.prevDown;
+      const prev = data[i - 1];
+      ext.prevDown = prev.down;
+      ext.prevUp = prev.up;
+      ext.delta = d.down - prev.down;
       ext.speed = Math.round(60 * 1000 / ext.delta);
     }
     return {...d, ...defaultExt, ...ext};
+  });
+}
+
+export function diffData(data, ref) {
+  if (data.length !== ref.length ||
+      data.some((d, i) => d.key !== ref[i].key)) {
+    throw new Error('diffData: invalid reference data');
+  }
+  return data.map((d, i) => {
+    const r = ref[i];
+    const diffDown = r.down - d.down;
+    const diffUp = r.up - d.up;
+    const diffDelta = r.delta - d.delta;
+
+    return {...d, diffDown, diffUp, diffDelta};
   });
 }
 
