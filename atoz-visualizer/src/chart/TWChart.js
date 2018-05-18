@@ -7,7 +7,7 @@ class TWChartAverageLabel extends Component {
     const defaultStyle = {
       fontSize: '16',
       fill: 'gray',
-      backgroundColor: 'lightgray'
+      backgroundColor: 'whitesmoke'
     };
     const propStyle = this.props.style || {};
     const style = {...defaultStyle, ...propStyle};
