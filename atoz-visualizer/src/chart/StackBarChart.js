@@ -8,7 +8,7 @@ export class StackBarChart extends Component {
 
     return (
       <BarChart data={setupData(data)} layout="horizontal" width={1000} height={400} barCategoryGap="4">
-        <YAxis type="number" axisLine={false} allowDecimals={false} tickCount={10} />
+        <YAxis type="number" allowDecimals={false} tickCount={10} />
         <XAxis type="category" dataKey="key" tickLine={false} />
         <CartesianGrid vertical={false} stroke="#ccc" strokeDasharray="5 5" />
         <Bar dataKey="delta" stackId="a" fill="darkslategray" stroke="darkslategray" isAnimationActive={false}>

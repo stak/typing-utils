@@ -55,6 +55,15 @@
   border-top: 1px solid darkslategray;
 }
 
+.Chart-subtitle {
+  padding-left: .7em;
+  padding-top: .1em;
+  color: darkslategray;
+  margin-left: 12px;
+  border: 1px solid darkslategray;
+  width: 30%;
+}
+
 .Heatmap-container {
   display: flex;
   padding: 0 40px;
