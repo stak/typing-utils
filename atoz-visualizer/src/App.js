@@ -17,6 +17,11 @@ function Header({title}) {
 function ChartExample({data}) {
   return (
     <div>
+      <h2 className="Chart-title">TW</h2>
+      <h3>Clone style</h3>
+      <Chart.TWChart data={data} useRank={true} kpmRange="5" tickCount={3} />
+      <h3>Numeric style</h3>
+      <Chart.TWChart data={data} useRank={false} kpmRange="5" domain={[0, 'auto']} />
       <h2 className="Chart-title">Gantt</h2>
       <Chart.GanttChart data={data} />
       <h2 className="Chart-title">Timeline</h2>
@@ -27,14 +32,14 @@ function ChartExample({data}) {
       <div className="Heatmap-container">
         <div>
           <h3>bg</h3>
-          <h4>(Monochrome, score.kpm)</h4>
-          <Chart.Heatmap data={data} type="bg" dataKey="score.kpm"
+          <h4>(Monochrome, score.speed)</h4>
+          <Chart.Heatmap data={data} type="bg" dataKey="score.speed"
                          colors={['darkslategray', 'white']} min="30" max="70" />
           <h4>(Monochrome, delta)</h4>
           <Chart.Heatmap data={data} type="bg" dataKey="delta"
                          colors={['white', 'darkslategray']} min="0" max="100" />
-          <h4>(Excel-style, score.kpm)</h4>
-          <Chart.Heatmap data={data} type="bg" dataKey="score.kpm"
+          <h4>(Excel-style, score.speed)</h4>
+          <Chart.Heatmap data={data} type="bg" dataKey="score.speed"
                          colors={['lightpink', 'white', 'lightblue']} min="30" max="70" />
           <h4>(Excel-style, delta)</h4>
           <Chart.Heatmap data={data} type="bg" dataKey="delta"
@@ -42,14 +47,14 @@ function ChartExample({data}) {
         </div>
         <div>
           <h3>fg</h3>
-          <h4>(Monochrome, score.kpm)</h4>
-          <Chart.Heatmap data={data} type="fg" dataKey="score.kpm"
+          <h4>(Monochrome, score.speed)</h4>
+          <Chart.Heatmap data={data} type="fg" dataKey="score.speed"
                          colors={['darkslategray', 'darkgray']} min="30" max="70" />
           <h4>(Monochrome, delta)</h4>
           <Chart.Heatmap data={data} type="fg" dataKey="delta"
                          colors={['darkgray', 'darkslategray']} min="0" max="100" />
-          <h4>(Excel-style, score.kpm)</h4>
-          <Chart.Heatmap data={data} type="fg" dataKey="score.kpm"
+          <h4>(Excel-style, score.speed)</h4>
+          <Chart.Heatmap data={data} type="fg" dataKey="score.speed"
                          colors={['lightpink', 'darkgray', 'lightblue']} min="30" max="70" />
           <h4>(Excel-style, delta)</h4>
           <Chart.Heatmap data={data} type="fg" dataKey="delta"
@@ -57,14 +62,14 @@ function ChartExample({data}) {
         </div>
         <div>
           <h3>border</h3>
-          <h4>(Monochrome, score.kpm)</h4>
-          <Chart.Heatmap data={data} type="border" dataKey="score.kpm"
+          <h4>(Monochrome, score.speed)</h4>
+          <Chart.Heatmap data={data} type="border" dataKey="score.speed"
                          colors={['darkslategray', 'darkgray']} min="30" max="70" />
           <h4>(Monochrome, delta)</h4>
           <Chart.Heatmap data={data} type="border" dataKey="delta"
                          colors={['darkgray', 'darkslategray']} min="0" max="100" />
-          <h4>(Excel-style, score.kpm)</h4>
-          <Chart.Heatmap data={data} type="border" dataKey="score.kpm"
+          <h4>(Excel-style, score.speed)</h4>
+          <Chart.Heatmap data={data} type="border" dataKey="score.speed"
                          colors={['lightpink', 'darkgray', 'lightblue']} min="30" max="70" />
           <h4>(Excel-style, delta)</h4>
           <Chart.Heatmap data={data} type="border" dataKey="delta"

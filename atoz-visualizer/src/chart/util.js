@@ -1,12 +1,15 @@
 import parseColor from 'parse-color';
 
+export const KPM_RANGE_MIN = 3;
+export const KPM_RANGE_MAX = 10;
+
 export function setupData(data) {
   const defaultExt = {
     press: 0,
     prevDown: 0,
     prevUp: 0,
     delta: 0,
-    kpm: 0,
+    speed: 0,
   };
   return data.map((d, i) => {
     const ext = {};
@@ -15,18 +18,35 @@ export function setupData(data) {
       ext.prevDown = data[i - 1].down;
       ext.prevUp = data[i - 1].up;
       ext.delta = d.down - ext.prevDown;
-      ext.kpm = 60 * 1000 / ext.delta;
+      ext.speed = Math.round(60 * 1000 / ext.delta);
     }
     return {...d, ...defaultExt, ...ext};
   });
 }
 
-export function average(array) {
+export function kpmData(data) {
+  return data.map((d, i) => {
+    const ext = {};
+    for (let range = KPM_RANGE_MIN; range <= KPM_RANGE_MAX && range <= i; ++range) {
+      const ellapsed = data[i].down - data[i - range + 1].prevDown;
+
+      // moving kpm
+      ext['kpm' + range] = Math.round(60 * 1000 * range / ellapsed);
+    }
+    if (i > 0) {
+      // total kpm
+      ext.kpm = Math.round(60 * 1000 * i / data[i].down);
+    }
+    return {...d, ...ext};
+  });
+}
+
+function average(array) {
   const sum = array.reduce((p, n) => p + n);
   return sum / array.length;
 }
 
-export function standardScore(n, avg, sd) {
+function standardScore(n, avg, sd) {
   return 50 + 10 * (n - avg) / sd;
 }
 
@@ -97,4 +117,68 @@ export function mapColor({colors, min, max}, value) {
   const color = colorFrom.map((c, i) => c * (1 - colorP) + colorTo[i] * colorP);
 
   return `rgba(${color.join(',')})`;
+}
+
+const twRankTimes = [
+  {time: 0, rank: 'M3'},
+  {time: 2, rank: 'M2'},
+  {time: 4, rank: 'M1'},
+  {time: 6, rank: 'ZZ'},
+  {time: 8, rank: 'ZX'},
+  {time: 10, rank: 'ZS'},
+  {time: 12, rank: 'ZA'},
+  {time: 14, rank: 'ZB'},
+  {time: 16, rank: 'ZC'},
+  {time: 18, rank: 'ZD'},
+  {time: 20, rank: 'ZE'},
+  {time: 22, rank: 'ZF'},
+  {time: 24, rank: 'ZG'},
+  {time: 26, rank: 'ZH'},
+  {time: 28, rank: 'ZI'},
+  {time: 30, rank: 'ZJ'},
+  {time: 32, rank: 'XX'},
+  {time: 34, rank: 'XS'},
+  {time: 36, rank: 'XA'},
+  {time: 38, rank: 'XB'},
+  {time: 40, rank: 'XC'},
+  {time: 42, rank: 'XD'},
+  {time: 44, rank: 'XE'},
+  {time: 46, rank: 'XF'},
+  {time: 48, rank: 'XG'},
+  {time: 50, rank: 'XH'},
+  {time: 52, rank: 'XI'},
+  {time: 54, rank: 'XJ'},
+  {time: 56, rank: 'SS'},
+  {time: 58, rank: 'SA'},
+  {time: 60, rank: 'SB'},
+  {time: 62, rank: 'SC'},
+  {time: 64, rank: 'SD'},
+  {time: 66, rank: 'SE'},
+  {time: 68, rank: 'SF'},
+  {time: 70, rank: 'SG'},
+  {time: 72, rank: 'SH'},
+  {time: 74, rank: 'SI'},
+  {time: 76, rank: 'SJ'},
+  {time: 80, rank: 'A'},
+  {time: 86, rank: 'B'},
+  {time: 94, rank: 'C'},
+  {time: 104, rank: 'D'},
+  {time: 116, rank: 'E'},
+  {time: 130, rank: 'F'},
+  {time: 146, rank: 'G'},
+  {time: 164, rank: 'H'},
+  {time: 184, rank: 'I'},
+  {time: 206, rank: 'J'},
+  {time: Infinity, rank: '-'},
+];
+
+export function calcTWRank(kpm) {
+  if (kpm === 0) kpm = 1;
+  const twLength = 400;
+  const twTime = twLength / kpm * 60;
+  for (let o of twRankTimes) {
+    if (twTime < o.time) {
+      return o.rank;
+    }
+  }
 }
