@@ -21,19 +21,24 @@ function Header({title}) {
 function ChartExample({data}) {
   return (
     <div>
-      <h2 className="Chart-title">Diff</h2>
-      <Chart.DiffChart data={data} refKpm="1000" />
       <h2 className="Chart-title">TW</h2>
       <h3 className="Chart-subtitle">Clone style</h3>
       <Chart.TWChart data={data} useRank={true} kpmRange="5" tickCount={3} />
       <h3 className="Chart-subtitle">Numeric style</h3>
       <Chart.TWChart data={data} useRank={false} kpmRange="5" domain={[0, 'auto']} />
+
       <h2 className="Chart-title">Gantt</h2>
       <Chart.GanttChart data={data} />
+
       <h2 className="Chart-title">Timeline</h2>
       <Chart.TimelineChart data={data} />
+
+      <h2 className="Chart-title">Diff</h2>
+      <Chart.DiffChart data={data} refKpm="1000" />
+
       <h2 className="Chart-title">Bar</h2>
       <Chart.StackBarChart data={data} />
+
       <h2 className="Chart-title">Heatmap</h2>
       <div className="Heatmap-container">
         <div>
@@ -87,12 +92,26 @@ function ChartExample({data}) {
 }
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      data: []
+    };
+  }
+  onDataChanged = (data) => {
+    this.setState({
+      data
+    });
+  }
   render() {
+    // <ChartExample data={this.state.data} />
     return (
       <div className="App">
         <Header title={APP_NAME} />
-        <Game word={words.atoz} />
-        <ChartExample data={testData} />
+        <Game word={words.atoz} onDataChanged={this.onDataChanged} />
+        <h2 className="Chart-title">Timeline</h2>
+        <Chart.TimelineChart data={this.state.data} />
       </div>
     );
   }
