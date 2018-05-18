@@ -26,12 +26,20 @@ export class TimelineTopLabel extends Component {
 
 export class TimelineChart extends Component {
   render() {
+    /* note:
+        Bar component extends data keys such as 'x', 'y', 'value',
+        which is used in recharts internally.
+        So we shuold avoid conflicting to guard our original data.
+        In this case, I choose to add prefix '_'.
+    */
+    const addPrefix = k => '_' + k;
+    const accessor = (k, d) => d[addPrefix(k)] ? d[addPrefix(k)] : '';
+
     const extData = setupData(this.props.data);
     const flatData = extData.reduce((prev, current) => {
-      prev[current.key] = current.delta;
+      prev[addPrefix(current.key)] = current.delta;
       return prev;
     }, {});
-    const accessor = (k, d) => d[k] ? d[k] : '';
 
     return (
       <BarChart data={[flatData]} layout="vertical" width={1000} height={100} barCategoryGap="4" margin={{top: 15, right: 5, bottom: 5, left: 64}}>
@@ -41,7 +49,7 @@ export class TimelineChart extends Component {
         {
           // TODO: 色
           extData.map(d => (
-            <Bar key={d.key} dataKey={d.key} stackId="a"
+            <Bar key={d.key} dataKey={addPrefix(d.key)} stackId="a"
                 fill="transparent" stroke="darkslategray" isAnimationActive={false}>
               <LabelList valueAccessor={accessor.bind(null, d.key)} position="center" fill="gray" fontSize="9" />
               <LabelList content={<TimelineTopLabel />} name={d.key} />
