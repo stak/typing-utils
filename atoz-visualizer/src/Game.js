@@ -1,5 +1,17 @@
 import React, { Component } from 'react';
+import { Howl } from 'howler';
 import './Game.css';
+import piOgg from './media/pi.ogg';
+import piMp3 from './media/pi.mp3';
+import missOgg from './media/miss.ogg';
+import missMp3 from './media/miss.mp3';
+
+const typeSound = new Howl({
+  src: [piOgg, piMp3]
+});
+const missSound = new Howl({
+  src: [missOgg, missMp3]
+});
 
 class GameView extends Component {
   render() {
@@ -114,6 +126,7 @@ export class Game extends Component {
     if (this.handleSpecialKeys(key)) return;
 
     if (key === word[pos]) {
+      typeSound.play();
       this.updateKeyDown(pos);
 
       this.props.onDataChanged(this.state.data);
@@ -122,6 +135,7 @@ export class Game extends Component {
       this.pressingKeysToPos[key] = pos;
     } else {
       // typo
+      missSound.play();
     }
   }
 
