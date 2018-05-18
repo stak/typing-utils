@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import store from 'store2';
 import Chart from './chart';
 import { Game } from './Game';
 import { ResultList } from './ResultList';
@@ -96,18 +97,26 @@ class App extends Component {
   constructor(props) {
     super(props);
 
+    if (!store.get('results')) {
+      store.set('results', []);
+    }
+
     this.state = {
       currentData: [],
-      results: []
+      results: store.get('results')
     };
   }
   onDataChanged = (data, completed) => {
-    this.setState((prev, props) => ({
-      currentData: data,
-      results: completed ?
-               prev.results.concat([data]):
-               prev.results
-    }));
+    this.setState({
+      currentData: data
+    });
+    if (completed) {
+      const addedResults = store.get('results').concat([data]);
+      store.set('results', addedResults);
+      this.setState({
+        results: addedResults
+      });
+    }
   }
   render() {
     // <ChartExample data={testData} />
