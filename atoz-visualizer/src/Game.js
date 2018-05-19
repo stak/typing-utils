@@ -67,6 +67,16 @@ export class Game extends PureComponent {
     return false;
   }
 
+  handleInitialKey = (key) => {
+    const { word } = this.props;
+
+    if (key === word[0] && key !== word[this.state.pos]) {
+      this.reset();
+      return true;
+    }
+    return false;
+  }
+
   updateKeyDown = (pos) => {
     const t = Date.now();
     if (pos === 0) {
@@ -117,12 +127,15 @@ export class Game extends PureComponent {
 
   onKeyDown = (e) => {
     const { word } = this.props;
-    const { pos } = this.state;
+    let { pos } = this.state;
     const key = e.key;
 
     e.preventDefault();
     if (e.repeat) return; // ignore auto repeat
     if (this.handleSpecialKeys(key)) return;
+    if (this.handleInitialKey(key)) {
+      pos = 0;
+    }
 
     if (key === word[pos]) {
       const { data } = this.updateKeyDown(pos);
