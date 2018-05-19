@@ -113,10 +113,16 @@ class App extends Component {
     if (completed) {
       const addedResults = store.get('results').concat([data]);
       store.set('results', addedResults);
+
       this.setState({
         results: addedResults
       });
     }
+  }
+  onResultChanged = (data) => {
+    this.setState({
+      currentData: data
+    });
   }
   render() {
     // <ChartExample data={testData} />
@@ -124,7 +130,7 @@ class App extends Component {
       <div className="App">
         <Header title={APP_NAME} />
         <Game word={words.atoz} onDataChanged={this.onDataChanged} />
-        <ResultList results={this.state.results} />
+        <ResultList results={this.state.results} onResultChanged={this.onResultChanged} />
         <h2 className="Chart-title">Timeline</h2>
         <Chart.TimelineChart data={this.state.currentData} />
       </div>

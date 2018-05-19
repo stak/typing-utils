@@ -3,16 +3,20 @@ import './ResultList.css';
 
 class Result extends Component {
   render() {
-    const { data } = this.props;
+    const { data, onClick } = this.props;
     const totalTime = data[data.length - 1].down;
 
     return (
-      <span className="ResultItem">{totalTime}</span>
+      <a className="ResultItem" href="#" onClick={onClick}>{totalTime}</a>
     );
   }
 }
 
 export class ResultList extends Component {
+  onClick = (r, e) => {
+    this.props.onResultChanged(r);
+  }
+
   render() {
     const { results } = this.props;
     const sortedResults = results.sort((a, b) => a[a.length - 1].down - b[b.length - 1].down);
@@ -20,7 +24,7 @@ export class ResultList extends Component {
     return (
       <div className="ResultList">
       {
-        sortedResults.map(r => <Result data={r} />)
+        sortedResults.map(r => <Result data={r} onClick={this.onClick.bind(this, r)} />)
       }
       </div>
     );
