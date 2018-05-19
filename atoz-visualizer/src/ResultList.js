@@ -21,7 +21,7 @@ export class ResultList extends PureComponent {
     const { results } = this.props;
     const sorted = results.sort((a, b) => a[a.length - 1].down - b[b.length - 1].down);
     sorted.forEach(r => {
-      r.key = r.reduce((prev, current) => prev.down + ',' + current.down, '');
+      r.key = r.reduce((prev, current) => prev + current.down + ',', '');
     });
 
     return (
