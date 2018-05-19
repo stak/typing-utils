@@ -131,6 +131,9 @@ class App extends PureComponent {
     if (completed) {
       const addedResults = store.get('results').concat([data]);
       this.setResults(addedResults);
+
+      const sorted = addedResults.sort((a, b) => a[a.length - 1].down - b[b.length - 1].down);
+      return sorted.findIndex(e => e === data);
     }
   }
   onResultChanged = (data) => {

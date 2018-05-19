@@ -35,7 +35,6 @@
     color: silver;
 }
 
-
 .ResultItem {
     font-size: 12pt;
     font-family: Monaco, "Lucida Console", monospace;
@@ -45,9 +44,23 @@
     border-bottom: 2px solid darkslategray;
     outline: none;
 }
-.ResultItem:hover {
+.ok > .ResultItem {
+    background-color: white;
+}
+.ok > .ResultItem:hover {
     background-color: whitesmoke;
 }
-.ResultItem:active {
-    background-color: slategray;
+.ok > .ResultItem:active {
+    border: 2px solid darkslategray;
+    border-bottom: 1px solid darkslategray;
+}
+.ng > .ResultItem {
+    background-color: silver;
+}
+.ng > .ResultItem:hover {
+    background-color: gray;
+}
+.ng > .ResultItem:active {
+    border: 2px solid darkslategray;
+    border-bottom: 1px solid darkslategray;
 }

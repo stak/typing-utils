@@ -5,19 +5,44 @@
 }
 
 .GameView {
-    padding: 0 .2em;
+    display: inline-block;
+    padding: 0 .3em;
     font-size: 32pt;
     font-family: Monaco, "Lucida Console", monospace;
     border: 2px solid darkslategray;
     white-space: nowrap;
+    letter-spacing: 2px;
 }
-.GameView .note {
-    color: gray;
+.GameViewInactive {
+    display: inline-block;
+    padding: 0 .3em;
+    font-size: 32pt;
+    font-family: Monaco, "Lucida Console", monospace;
+    border: 2px solid silver;
+    white-space: nowrap;
+    letter-spacing: 2px;
+}
+.GameViewInactive:hover {
+    border: 2px solid slategray;
+    cursor: pointer;
 }
 .GameView .past {
     color: whitesmoke;
 }
 .GameView .rest {
+    color: darkslategray;
+}
+.GameViewInactive .past {
+    color: whitesmoke;
+}
+.GameViewInactive .rest {
+    color: silver;
+}
+.GameViewInactive:hover .rest {
+    color: slategray;
+}
+
+.GameResult {
     color: darkslategray;
 }
 

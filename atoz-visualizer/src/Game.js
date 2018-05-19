@@ -8,33 +8,51 @@ const howl = Object.assign( // Object.map
            .map(([name, src]) => ({[name]: new Howl({src})}))
 );
 
+class GameResult extends PureComponent {
+  render() {
+    const { data, rank } = this.props;
+
+    const totalTime = data[data.length - 1].down;
+    const totalMiss = data.reduce((prev, current) =>
+      prev + (current.miss ? current.miss.length : 0)
+    , 0);
+    const rankStr = `${rank}${['', 'st', 'nd', 'rd'][rank] || 'th'}`;
+    const resultText = `${totalTime}-${totalMiss} (${rankStr})`
+
+    return (
+      <span className="GameResult">{resultText}</span>
+    );
+  }
+}
+
 class GameView extends PureComponent {
   render() {
-    const { word, pos, isPlaying } = this.props;
+    const { word, pos, focus, children } = this.props;
     const past = word.slice(0, pos).toUpperCase();
     const rest = word.slice(pos).toUpperCase();
     const pastTag = <span className="past">{past}</span>;
     const restTag = <span className="rest">{rest}</span>;
 
-    if (!isPlaying) {
-      return <div className="GameView"><span className="note">CLICK HERE TO PLAY</span></div>;
-    }
-
     return (
-      <div className="GameView">{pastTag}{restTag}</div>
+      <div className={focus ? 'GameView' : 'GameViewInactive'}>
+        {children ? children : [pastTag, restTag]}
+      </div>
     );
   }
 }
 
 export class Game extends PureComponent {
+  pressingKeysToPos = {}
+  finishedRank = 0
+
   constructor(props) {
     super(props);
 
-    this.pressingKeysToPos = {};
     this.state = {
-      isPlaying: false,
+      focus: false,
       pos: 0,
       data: this.initialData(),
+      finished: false,
     };
   }
 
@@ -52,6 +70,7 @@ export class Game extends PureComponent {
     this.setState({
       pos: 0,
       data: this.initialData(),
+      finished: false,
     });
   }
 
@@ -82,14 +101,15 @@ export class Game extends PureComponent {
     if (pos === 0) {
       this.startTime = t;
     }
+    const ellapsed = t - this.startTime;
 
     const makeNewState = (prev, props) => ({
       pos: prev.pos + 1,
       data: prev.data.map((d, i) =>
         i !== pos ? d : {
           ...d,
-          down: t - this.startTime,
-          up: t - this.startTime
+          down: ellapsed,
+          up: ellapsed
         }
       )
     });
@@ -99,12 +119,30 @@ export class Game extends PureComponent {
   }
 
   updateKeyUp = (pos) => {
-    const t = Date.now();
+    const ellapsed = Date.now() - this.startTime;
+
     const makeNewState = (prev, props) => ({
       data: prev.data.map((d, i) =>
         i !== pos ? d : {
           ...d,
-          up: t - this.startTime
+          up: ellapsed
+        }
+      )
+    });
+
+    this.setState(makeNewState);
+    return makeNewState(this.state, this.props);
+  }
+
+  updateMiss = (pos) => {
+    const ellapsed = Date.now() - this.startTime;
+    const makeNewState = (prev, props) => ({
+      data: prev.data.map((d, i) =>
+        i !== pos ? d : {
+          ...d,
+          miss: d.miss ?
+                d.miss.concat(ellapsed):
+                [ellapsed]
         }
       )
     });
@@ -118,11 +156,14 @@ export class Game extends PureComponent {
   }
 
   onFocus = (e) => {
-    this.setState({isPlaying: true});
+    if (this.state.finished) {
+      this.reset();
+    }
+    this.setState({focus: true});
   }
 
   onBlur = (e) => {
-    this.setState({isPlaying: false});
+    this.setState({focus: false});
   }
 
   onKeyDown = (e) => {
@@ -133,13 +174,12 @@ export class Game extends PureComponent {
     e.preventDefault();
     if (e.repeat) return; // ignore auto repeat
     if (this.handleSpecialKeys(key)) return;
-    if (this.handleInitialKey(key)) {
-      pos = 0;
-    }
+    if (this.handleInitialKey(key)) pos = 0;
+    else if (this.state.finished) return;
 
     if (key === word[pos]) {
       const { data } = this.updateKeyDown(pos);
-      this.props.onDataChanged(data, false);
+      this.props.onDataChanged(data, false); // live update
 
       // cache pos for handling keyUp
       this.pressingKeysToPos[key] = pos;
@@ -147,20 +187,30 @@ export class Game extends PureComponent {
       if (pos === data.length - 1) {
         howl.finish.play();
       } else {
-        howl.pi.play();
+        howl.pi.play();1
       }
     } else {
       // typo
+      this.updateMiss(pos);
       howl.miss.play();
     }
   }
 
   onKeyUp = (e) => {
+    if (this.state.finished) return;
+
     if (e.key in this.pressingKeysToPos) {
       const pos = this.pressingKeysToPos[e.key];
       const { data } = this.updateKeyUp(pos);
 
-      this.props.onDataChanged(data, pos === data.length - 1);
+      if (pos === data.length - 1) {
+        this.finishedRank = 1 + this.props.onDataChanged(data, true);
+        this.setState({
+          finished: true
+        });
+      } else {
+        this.props.onDataChanged(data, false);
+      }
       delete this.pressingKeysToPos[e.key];
     }
     e.preventDefault();
@@ -175,10 +225,11 @@ export class Game extends PureComponent {
                 onFocus={this.onFocus} onBlur={this.onBlur}
                 onKeyDown={this.onKeyDown} onKeyUp={this.onKeyUp} />
         <GameView
-          isPlaying={this.state.isPlaying}
+          focus={this.state.focus}
           word={word}
-          pos={this.state.pos}
-        />
+          pos={this.state.pos}>
+          {this.state.finished ? <GameResult data={this.state.data} rank={this.finishedRank} /> : null}
+        </GameView>
       </div>
     );
   }

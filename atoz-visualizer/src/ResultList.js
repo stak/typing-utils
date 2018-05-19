@@ -18,9 +18,12 @@ class ResultItem extends PureComponent {
   render() {
     const { data, onClick, onResultRemove } = this.props;
     const totalTime = data[data.length - 1].down;
+    const totalMiss = data.reduce((prev, current) =>
+      prev + (current.miss ? current.miss.length : 0)
+    , 0);
 
     return (
-      <li>
+      <li className={totalMiss === 0 ? 'ok' : 'ng'}>
         <button className="ResultItem" onClick={onClick}>{totalTime}</button>
         <ResultRemoveButton onResultRemove={onResultRemove} />
       </li>
