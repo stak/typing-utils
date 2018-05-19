@@ -1,17 +1,12 @@
 import React, { PureComponent } from 'react';
 import { Howl } from 'howler';
+import * as soundSrc from './media';
 import './Game.css';
-import piOgg from './media/pi.ogg';
-import piMp3 from './media/pi.mp3';
-import missOgg from './media/miss.ogg';
-import missMp3 from './media/miss.mp3';
 
-const typeSound = new Howl({
-  src: [piOgg, piMp3]
-});
-const missSound = new Howl({
-  src: [missOgg, missMp3]
-});
+const howl = Object.assign( // Object.map
+  ...Object.entries(soundSrc)
+           .map(([name, src]) => ({[name]: new Howl({src})}))
+);
 
 class GameView extends PureComponent {
   render() {
@@ -136,10 +131,14 @@ export class Game extends PureComponent {
       // cache pos for handling keyUp
       this.pressingKeysToPos[key] = pos;
 
-      typeSound.play();
+      if (pos === data.length - 1) {
+        howl.finish.play();
+      } else {
+        howl.pi.play();
+      }
     } else {
       // typo
-      missSound.play();
+      howl.miss.play();
     }
   }
 
