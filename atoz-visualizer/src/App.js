@@ -137,10 +137,12 @@ class App extends PureComponent {
     return (
       <div className="App">
         <Header title={APP_NAME} />
+
         <Game word={words.atoz} onDataChanged={this.onDataChanged} />
+        <Chart.TWChart data={this.state.currentData} />
         <ResultList results={this.state.results} onResultChanged={this.onResultChanged} />
-        <h2 className="Chart-title">Timeline</h2>
-        <Chart.TimelineChart data={this.state.currentData} />
+
+        <ChartExample data={testData} />
       </div>
     );
   }
