@@ -7,7 +7,9 @@ class Result extends PureComponent {
     const totalTime = data[data.length - 1].down;
 
     return (
-      <a className="ResultItem" href="#" onClick={onClick}>{totalTime}</a>
+      <li>
+        <button className="ResultItem" onClick={onClick}>{totalTime}</button>
+      </li>
     );
   }
 }
@@ -26,9 +28,9 @@ export class ResultList extends PureComponent {
 
     return (
       <div className="ResultList">
-      {
-        sorted.map(r => <Result key={r.key} data={r} onClick={this.onClick.bind(this, r)} />)
-      }
+        <ol>{
+          sorted.map(r => <Result key={r.key} data={r} onClick={this.onClick.bind(this, r)} />)
+        }</ol>
       </div>
     );
   }

@@ -1,6 +1,7 @@
 
 .Game {
     margin: 20px;
+    overflow: hidden;
 }
 
 .GameView {
@@ -8,6 +9,7 @@
     font-size: 32pt;
     font-family: Monaco, "Lucida Console", monospace;
     border: 2px solid darkslategray;
+    white-space: nowrap;
 }
 .GameView .note {
     color: gray;

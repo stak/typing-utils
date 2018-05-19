@@ -1,23 +1,33 @@
 
 .ResultList {
-    margin: 20px;
-    width: 700px;
-    word-wrap: break-word;
-    line-height: 1.5;
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    width: 190px;
+    height: 100%;
+    padding-left: 10px;
+    border-left: 1px solid darkslategray;
+    background-color: rgba(255, 255, 255, 80%);
+    overflow-x: hidden;
+    overflow-y: scroll;
+    z-index: 2;
+}
+
+.ResultList > ol {
+    color: silver;
 }
 
 .ResultItem {
-    display: inline-block;
+    font-size: 12pt;
+    font-family: Monaco, "Lucida Console", monospace;
     margin: 2px;
     padding: 0px 8px 0px 8px;
     border: 1px solid darkslategray;
     border-bottom: 2px solid darkslategray;
-    border-radius: 14px;
 }
-a.ResultItem {
-    color: inherit;
-    text-decoration: inherit;
-}
-a.ResultItem:hover {
+.ResultItem:hover {
     background-color: whitesmoke;
+}
+.ResultItem:active {
+    background-color: slategray;
 }
