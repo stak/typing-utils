@@ -21,7 +21,7 @@ export function setupData(data) {
       ext.delta = d.down - prev.down;
       ext.speed = ext.delta > 0 ?
                   Math.round(60 * 1000 / ext.delta):
-                  9999;
+                  null;
     }
     return {...d, ...defaultExt, ...ext};
   });
@@ -51,13 +51,13 @@ export function kpmData(data) {
       // moving kpm
       ext['kpm' + range] = ellapsed > 0 ?
                            Math.round(60 * 1000 * range / ellapsed):
-                           9999;
+                           null;
     }
     if (i > 0) {
       // total kpm
       ext.kpm = data[i].down > 0 ?
                 Math.round(60 * 1000 * i / data[i].down):
-                9999;
+                null;
     }
     return {...d, ...ext};
   });
@@ -85,6 +85,7 @@ export function statsData(data) {
 
   for (let k of statKeys) {
       // TODO: A の無意味なデータを除外したい
+      // TODO: 無効値 null が含まれる場合の除外
       cache[k] = data.map(d => d[k])
                      .sort(((a, b) => Number(a) - Number(b)));
       const avg = average(cache[k]);
