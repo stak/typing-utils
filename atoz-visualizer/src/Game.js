@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Howl } from 'howler';
-import * as soundSrc from './media';
+import * as soundSrc from './sound';
 import './Game.css';
 
 const howl = Object.assign( // Object.map
