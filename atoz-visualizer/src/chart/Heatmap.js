@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {setupData, statsData, mapColor} from './util';
 
 function HeatmapCharBG(props) {
@@ -35,7 +35,7 @@ function HeatmapCharBorder(props) {
   );
 }
 
-export class Heatmap extends Component {
+export class Heatmap extends PureComponent {
   static typeToComponent = {
     bg: HeatmapCharBG,
     fg: HeatmapCharFG,

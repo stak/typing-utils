@@ -1,8 +1,8 @@
-import React, {Component} from 'react';
+import React, { PureComponent } from 'react';
 import {BarChart, YAxis, XAxis, CartesianGrid, Bar, LabelList} from 'recharts';
 import {setupData} from './util';
 
-export class TimelineTopLabel extends Component {
+export class TimelineTopLabel extends PureComponent {
   render() {
     const defaultStyle = {
       fontSize: '16',
@@ -24,7 +24,7 @@ export class TimelineTopLabel extends Component {
   }
 }
 
-export class TimelineChart extends Component {
+export class TimelineChart extends PureComponent {
   render() {
     /* note:
         Bar component extends data keys such as 'x', 'y', 'value',
@@ -41,6 +41,7 @@ export class TimelineChart extends Component {
       return prev;
     }, {});
 
+
     return (
       <BarChart data={[flatData]} layout="vertical" width={1000} height={100} barCategoryGap="4" margin={{top: 15, right: 5, bottom: 5, left: 64}}>
         <YAxis type="category" hide={true} />
@@ -48,12 +49,12 @@ export class TimelineChart extends Component {
         <CartesianGrid horizontal={false} stroke="#ccc" strokeDasharray="5 5" />
         {
           // TODO: 色
-          extData.map(d => (
-            <Bar key={d.key} dataKey={addPrefix(d.key)} stackId="a"
+          extData.map((d, i) => (
+            i === 0 || d.down ? <Bar key={d.key} dataKey={addPrefix(d.key)} stackId="a"
                 fill="transparent" stroke="darkslategray" isAnimationActive={false}>
               <LabelList valueAccessor={accessor.bind(null, d.key)} position="center" fill="gray" fontSize="9" />
               <LabelList content={<TimelineTopLabel />} name={d.key} />
-            </Bar>
+            </Bar> : null
           ))
         }
       </BarChart>

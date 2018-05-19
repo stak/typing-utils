@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { Howl } from 'howler';
 import './Game.css';
 import piOgg from './media/pi.ogg';
@@ -13,7 +13,7 @@ const missSound = new Howl({
   src: [missOgg, missMp3]
 });
 
-class GameView extends Component {
+class GameView extends PureComponent {
   render() {
     const { word, pos, isPlaying } = this.props;
     const past = word.slice(0, pos).toUpperCase();
@@ -31,7 +31,7 @@ class GameView extends Component {
   }
 }
 
-export class Game extends Component {
+export class Game extends PureComponent {
   constructor(props) {
     super(props);
 

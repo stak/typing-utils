@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {ComposedChart, YAxis, XAxis, CartesianGrid, Bar, Line, LabelList, ReferenceLine, Legend} from 'recharts';
 import {setupData, diffData} from './util';
 
-export class DiffChart extends Component {
+export class DiffChart extends PureComponent {
   makeReferenceWithKpm = (srcData, kpm) => {
     const baseTime = 60 * 1000 / kpm;
 

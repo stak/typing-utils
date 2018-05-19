@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {BarChart, YAxis, XAxis, CartesianGrid, Bar, LabelList} from 'recharts';
 import {setupData} from './util';
 
-export class StackBarChart extends Component {
+export class StackBarChart extends PureComponent {
   render() {
     const data = this.props.data;
 

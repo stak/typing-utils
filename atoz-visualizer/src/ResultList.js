@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import './ResultList.css';
 
-class Result extends Component {
+class Result extends PureComponent {
   render() {
     const { data, onClick } = this.props;
     const totalTime = data[data.length - 1].down;
@@ -12,19 +12,22 @@ class Result extends Component {
   }
 }
 
-export class ResultList extends Component {
+export class ResultList extends PureComponent {
   onClick = (r, e) => {
     this.props.onResultChanged(r);
   }
 
   render() {
     const { results } = this.props;
-    const sortedResults = results.sort((a, b) => a[a.length - 1].down - b[b.length - 1].down);
+    const sorted = results.sort((a, b) => a[a.length - 1].down - b[b.length - 1].down);
+    sorted.forEach(r => {
+      r.key = r.reduce((prev, current) => prev.down + ',' + current.down, '');
+    });
 
     return (
       <div className="ResultList">
       {
-        sortedResults.map(r => <Result data={r} onClick={this.onClick.bind(this, r)} />)
+        sorted.map(r => <Result key={r.key} data={r} onClick={this.onClick.bind(this, r)} />)
       }
       </div>
     );

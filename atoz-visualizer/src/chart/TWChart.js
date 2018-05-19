@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {LineChart, YAxis, XAxis, CartesianGrid, Line, ReferenceLine, Tooltip} from 'recharts';
 import {setupData, kpmData, calcTWRank, KPM_RANGE_MIN, KPM_RANGE_MAX} from './util';
 
-class TWChartAverageLabel extends Component {
+class TWChartAverageLabel extends PureComponent {
   render() {
     const defaultStyle = {
       fontSize: '16',
@@ -27,7 +27,7 @@ class TWChartAverageLabel extends Component {
   }
 }
 
-export class TWChart extends Component {
+export class TWChart extends PureComponent {
   formatTick = (kpm) => {
     if (this.props.useRank) {
       return calcTWRank(Number(kpm));
