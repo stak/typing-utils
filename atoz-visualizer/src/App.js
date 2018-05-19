@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import store from 'store2';
+import deepEqual from 'deep-equal';
 import Chart from './chart';
 import { Game } from './Game';
 import { ResultList } from './ResultList';
@@ -114,23 +115,39 @@ class App extends PureComponent {
       results: store.get('results')
     };
   }
+
+  setResults = (results) => {
+    store.set('results', results);
+    this.setState({
+      results: results
+    });
+  }
+
   onDataChanged = (data, completed) => {
     this.setState({
       currentData: data
     });
+
     if (completed) {
       const addedResults = store.get('results').concat([data]);
-      store.set('results', addedResults);
-
-      this.setState({
-        results: addedResults
-      });
+      this.setResults(addedResults);
     }
   }
   onResultChanged = (data) => {
     this.setState({
       currentData: data
     });
+  }
+  onResultRemove = (data) => {
+    const results = store.get('results');
+    const i = results.findIndex(e => deepEqual(e, data));
+
+    if (i >= 0) {
+      results.splice(i, 1);
+      this.setResults(results);
+    } else {
+      throw new Error('onResultRemove: cannot find specified data.');
+    }
   }
   render() {
     // <ChartExample data={testData} />
@@ -140,7 +157,9 @@ class App extends PureComponent {
 
         <Game word={words.atoz} onDataChanged={this.onDataChanged} />
         <Chart.TWChart data={this.state.currentData} />
-        <ResultList results={this.state.results} onResultChanged={this.onResultChanged} />
+        <ResultList results={this.state.results}
+                    onResultChanged={this.onResultChanged}
+                    onResultRemove={this.onResultRemove} />
 
         <ChartExample data={testData} />
       </div>

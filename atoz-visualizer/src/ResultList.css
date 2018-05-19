@@ -17,6 +17,25 @@
     color: silver;
 }
 
+.ResultList .removeButton {
+    /* reset */
+    background-color: transparent;
+    border: 0;
+    outline: none;
+    padding: 0;
+    appearance: none;
+
+    font-size: larger;
+    margin-left: .2em;
+    visibility: hidden;
+    color: white;
+}
+.ResultList li:hover .removeButton {
+    visibility: visible;
+    color: silver;
+}
+
+
 .ResultItem {
     font-size: 12pt;
     font-family: Monaco, "Lucida Console", monospace;
@@ -24,6 +43,7 @@
     padding: 0px 8px 0px 8px;
     border: 1px solid darkslategray;
     border-bottom: 2px solid darkslategray;
+    outline: none;
 }
 .ResultItem:hover {
     background-color: whitesmoke;
