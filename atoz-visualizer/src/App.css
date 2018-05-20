@@ -68,9 +68,13 @@
 }
 
 .Heatmap-container {
-  display: flex;
   padding: 0 40px;
 }
 .Heatmap-container > div {
   width: 400px;
+}
+
+.App .scrollX {
+  overflow-y: hidden;
+  overflow-x: scroll;
 }

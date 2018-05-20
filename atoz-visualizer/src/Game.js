@@ -209,7 +209,7 @@ export class Game extends PureComponent {
           finished: true
         });
       } else {
-        this.props.onDataChanged(data, false);
+        // don't report for live update performance
       }
       delete this.pressingKeysToPos[e.key];
     }

@@ -76,7 +76,7 @@ function standardScore(n, avg, sd) {
   }
 }
 
-export function statsData(data) {
+export function statsData(data, reverse) {
   if (!data || !data.length) return [];
   const keys = Object.keys(data[0]);
   const statKeys = keys.filter(k => typeof data[0][k] === 'number');
@@ -113,6 +113,11 @@ export function statsData(data) {
       ext.percentile[k] = fix(data.length > 1 ?
                               100 * ext.rank[k] / (data.length - 1):
                               0);
+      if (reverse) {
+        ext.score[k] = 100 - ext.score[k];
+        ext.rank[k] = cache[k].length - ext.rank[k] - 1;
+        ext.percentile[k] = 100 - ext.percentile[k];
+      }
     }
 
     return {...d, ...ext};

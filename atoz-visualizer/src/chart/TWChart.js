@@ -46,36 +46,32 @@ export class TWChart extends PureComponent {
     }
   }
 
-  rangeKpmKey = () => {
+  kpmRange = () => {
     const kpmRange = Number(this.props.kpmRange);
     if (kpmRange && KPM_RANGE_MIN <= kpmRange && kpmRange <= KPM_RANGE_MAX) {
-      return 'kpm' + this.props.kpmRange;
+      return this.props.kpmRange;
     } else {
-      return 'kpm' + KPM_RANGE_MIN;
+      return KPM_RANGE_MIN;
     }
-  }
-
-  tickCount = () => {
-    const tickCount = Number(this.props.tickCount);
-    if (tickCount) {
-      return tickCount;
-    } else {
-      return 10;
-    }
-  }
-
-  domain = () => {
-    const { domain } = this.props;
-    return domain ? domain : ['dataMin', 'dataMax'];
   }
 
   render() {
     const data = setupData(this.props.data);
+    const tickCount = Number(this.props.tickCount) || 10;
+    const domain = this.props.domain ?
+                   this.props.domain :
+                   ['dataMin', 'dataMax'];
+    const {
+      width,
+      height,
+      margin
+    } = this.props;
+
     const dataWithKpm = kpmData(data);
     const totalKpm = dataWithKpm.length ?
                      dataWithKpm[dataWithKpm.length - 1].kpm:
                      0;
-
+    const kpmRange = '' + this.kpmRange();
     const itemStyle = {
       margin: 0,
       padding: 0,
@@ -85,16 +81,53 @@ export class TWChart extends PureComponent {
     };
 
     return (
-      <LineChart data={dataWithKpm} layout="horizontal" width={1000} height={400} barCategoryGap="4">
-        <XAxis type="category" dataKey="key" tickLine={false} />
-        <YAxis type="number" domain={this.domain()} tickFormatter={this.formatTick} allowDecimals={false} tickCount={this.tickCount()} />
-        <CartesianGrid vertical={false} stroke="#ddd" strokeDasharray="5 5" />
-        <Line type="linear" dot={false} dataKey={this.rangeKpmKey()} name="kpm" stroke="darkred" strokeDasharray="2 2" isAnimationActive={false}>
-        </Line>
-        <Line type="linear" dot={false} dataKey="kpm" name="avg" stroke="darkblue" strokeDasharray="2 2" isAnimationActive={false}>
-        </Line>
-        <ReferenceLine y={totalKpm} label={<TWChartAverageLabel text={this.formatTooltip(totalKpm)} />} stroke="lightgray"/>
-        <Tooltip isAnimationActive={false} separator=":" formatter={this.formatTooltip} itemStyle={itemStyle} />
+      <LineChart data={dataWithKpm} layout="horizontal" width={width} height={height} margin={margin}>
+        <XAxis
+          type="category"
+          dataKey="key"
+          tickLine={false}
+        />
+        <YAxis
+          type="number"
+          domain={domain}
+          tickFormatter={this.formatTick}
+          allowDecimals={false}
+          tickCount={tickCount}
+        />
+        <CartesianGrid
+          vertical={false}
+          stroke="#ddd"
+          strokeDasharray="5 5"
+        />
+        <Line
+          type="linear"
+          dot={false}
+          dataKey={'kpm' + kpmRange}
+          name="kpm"
+          stroke="darkred"
+          strokeDasharray="2 2"
+          isAnimationActive={false}
+        />
+        <Line
+          type="linear"
+          dot={false}
+          dataKey="kpm"
+          name="avg"
+          stroke="darkblue"
+          strokeDasharray="2 2"
+          isAnimationActive={false}
+        />
+        <ReferenceLine
+          y={totalKpm}
+          label={<TWChartAverageLabel text={this.formatTooltip(totalKpm)} />}
+          stroke="lightgray"
+        />
+        <Tooltip
+          separator=":"
+          formatter={this.formatTooltip}
+          itemStyle={itemStyle}
+          isAnimationActive={false}
+        />
       </LineChart>
     );
   }

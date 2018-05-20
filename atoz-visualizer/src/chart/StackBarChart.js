@@ -4,11 +4,21 @@ import {setupData} from './util';
 
 export class StackBarChart extends PureComponent {
   render() {
-    const data = this.props.data;
+    const {
+      data,
+      width,
+      height,
+      margin,
+      domain,
+      barCategoryGap,
+      barGap,
+      tickCount,
+    } = this.props;
+    const nulledData = setupData(data).map(d => d.up ? d : {...d, prevDown: null, delta: null, press: null});
 
     return (
-      <BarChart data={setupData(data)} layout="horizontal" width={1000} height={400} barCategoryGap="4">
-        <YAxis type="number" allowDecimals={false} tickCount={10} />
+      <BarChart data={nulledData} layout="horizontal" width={width} height={height} barCategoryGap={barCategoryGap} barGap={barGap} margin={margin}>
+        <YAxis type="number" allowDataOverflow={true} domain={domain} allowDecimals={false} tickCount={tickCount} />
         <XAxis type="category" dataKey="key" tickLine={false} />
         <CartesianGrid vertical={false} stroke="#ccc" strokeDasharray="5 5" />
         <Bar dataKey="delta" stackId="a" fill="darkslategray" stroke="darkslategray" isAnimationActive={false}>

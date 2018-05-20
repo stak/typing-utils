@@ -1,38 +1,65 @@
 import React, { PureComponent } from 'react';
 import {setupData, statsData, mapColor} from './util';
 
-function HeatmapCharBG(props) {
-  const color = props.mapper(props.data);
-  const style = {
-    ...props.style,
-    backgroundColor: color
-  };
-  return (
-    <span style={style} title={props.data}>{props.text}</span>
-  );
+class HeatmapCharBG extends PureComponent {
+  render() {
+    const {
+      data,
+      style,
+      text,
+      mapper
+    } = this.props;
+
+    const backgroundColor = mapper(data);
+    const composedStyle = {
+      ...style,
+      backgroundColor
+    };
+    return (
+      <span style={composedStyle} title={data}>{text}</span>
+    );
+  }
 }
 
-function HeatmapCharFG(props) {
-  const color = props.mapper(props.data);
-  const style = {
-    ...props.style,
-    color: color
-  };
-  return (
-    <span style={style} title={props.data}>{props.text}</span>
-  );
+class HeatmapCharFG extends PureComponent {
+  render() {
+    const {
+      data,
+      style,
+      text,
+      mapper
+    } = this.props;
+
+    const color = mapper(data);
+    const composedStyle = {
+      ...style,
+      color
+    };
+    return (
+      <span style={composedStyle} title={data}>{text}</span>
+    );
+  }
 }
 
-function HeatmapCharBorder(props) {
-  const color = props.mapper(props.data);
-  const style = {
-    ...props.style,
-    paddingBottom: 0,
-    borderBottom: '8px solid ' + color // TODO: use props
-  };
-  return (
-    <span style={style} title={props.data}>{props.text}</span>
-  );
+class HeatmapCharBorder extends PureComponent {
+  render() {
+    const {
+      data,
+      style,
+      text,
+      mapper
+    } = this.props;
+
+    const borderColor = mapper(data);
+    const composedStyle = {
+      ...style,
+      paddingBottom: 0,
+      borderBottom: '8px solid ' + borderColor // TODO: use props
+    };
+    return (
+      <span style={composedStyle} title={data}>{text}</span>
+    );
+  }
 }
 
 export class Heatmap extends PureComponent {
@@ -53,6 +80,10 @@ export class Heatmap extends PureComponent {
     padding: '6px 6px',
   }
 
+  defaultOuterStyle = {
+    margin: '20px'
+  }
+
   getByKeyString(keyString, d) {
     let current = d;
     const keys = keyString.split('.');
@@ -67,11 +98,18 @@ export class Heatmap extends PureComponent {
   }
 
   render() {
-    const data = statsData(setupData(this.props.data));
+    const filteredData = setupData(this.props.data)
+                         .filter(d => d.up > 0);
+    const stat = statsData(filteredData, !!this.props.reverse);
     const style = {
       ...this.defaultStyle,
       ...this.props.style
     };
+    const outerStyle = {
+      ...this.defaultOuterStyle,
+      ...this.props.outerStyle
+    };
+    const outerClass = this.props.outerClass;
     const CharComponent = Heatmap.typeToComponent[this.props.type];
     if (!CharComponent) {
       throw new Error(`Heatmap: unknown type "${this.props.type}" is specified`);
@@ -87,12 +125,12 @@ export class Heatmap extends PureComponent {
                    mapColor.bind(null, mapParams);
 
     return (
-      <div>
+      <div style={outerStyle} className={outerClass}>
         {
-          data.map(d =>
-            <CharComponent key={d.key} text={d.key} style={style}
-                           data={getData(d)}
-                           mapper={mapper} />
+          stat.map(d =>
+            d.up === 0 ? null: <CharComponent key={d.key} text={d.key} style={style}
+                                              data={getData(d)}
+                                              mapper={mapper} />
           )
         }
       </div>

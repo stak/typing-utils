@@ -3,6 +3,7 @@ import store from 'store2';
 import deepEqual from 'deep-equal';
 import Chart from './chart';
 import { Game } from './Game';
+import { Option } from './Option';
 import { ResultList } from './ResultList';
 import './App.css';
 
@@ -102,6 +103,96 @@ class ChartExample extends PureComponent {
   }
 }
 
+class RealtimeChart extends PureComponent {
+  render() {
+    const { data, type, width, height } = this.props;
+    const w = Number(width) || 1000;
+    const h = Number(height) || 300;
+    const option = this.props.option || {};
+
+    let chart;
+    switch (type) {
+      case 'TW':
+        chart = <Chart.TWChart
+          data={data} width={w} height={h} margin={{left: -8, right: 30}}
+          kpmRange={4}
+          useRank={true}
+        />;
+        break;
+      case 'Timeline':
+        chart = (
+          <div className="scrollX" style={{height: h / 2 + 'px'}}>
+            <Chart.TimelineChart
+              data={data} width={w * 2} height={h / 2} margin={{left: 45, right: 105, bottom: 10}}
+              domain={option.target ?
+                [0, option.target * 2]:
+                [0, 'auto']
+              }
+              tickCount={option.tickCount || 20}
+            />;
+          </div>
+        );
+        break;
+      case 'Gantt':
+        chart = (
+          <div className="scrollX" style={{height: h * 2 + 'px'}}>
+            <Chart.GanttChart
+              data={data} width={w * 2} height={h * 2} margin={{left: -12, right: 110, bottom: 10}}
+              domain={option.target ?
+                [0, option.target * 2]:
+                [0, 'auto']
+              }
+              tickCount={option.tickCount || 20}
+            />;
+          </div>
+        );
+        break;
+      case 'Diff':
+        chart = <Chart.DiffChart
+          data={data} width={w} height={h} margin={{left: -6, right: 0}}
+          refTime={option.target}
+          refKpm={option.refKpm}
+          refData={option.refData}
+        />;
+        break;
+      case 'Bar':
+        chart = <Chart.StackBarChart
+          data={data} width={w} height={h} margin={{left: -6, right: 0}}
+          domain={option.target ?
+            [0, 10 * option.target / (data.length - 1)]:
+            [0, 'auto']
+          }
+        />;
+        break;
+      case 'Heatmap':
+        chart = <Chart.Heatmap type="bg"
+          data={data} width={w} height={h}
+          dataKey={option.dataKey || 'score.delta'}
+          reverse={true}
+          colors={option.colors || ['darkslategray', 'white']}
+          min={option.min || 30}
+          max={option.max || 70}
+          outerStyle={{
+            marginLeft: '52px',
+            fontFamily: 'Monaco, "Lucida Console", monospace',
+            letterSpacing: '2px',
+            whiteSpace: 'nowrap'
+          }}
+          style={{
+            color: 'rgba(255, 255, 255, 30%)',
+            fontSize: '32pt',
+            padding: 0
+          }}
+        />;
+        break;
+      default:
+        throw new Error('RealtimeChart: unknown type "' + type + '"');
+    }
+
+    return chart;
+  }
+}
+
 class App extends PureComponent {
   constructor(props) {
     super(props);
@@ -109,8 +200,19 @@ class App extends PureComponent {
     if (!store.get('results')) {
       store.set('results', []);
     }
+    if (!store.get('options')) {
+      store.set('options', {
+        realtimeChart: 'Bar',
+        quickRetry: true,
+        stopOnMiss: false,
+        seCorrect: 'pi',
+        seMiss: 'miss',
+        seFinish: 'finish',
+      })
+    }
 
     this.state = {
+      options: store.get('options'),
       currentData: [],
       results: store.get('results')
     };
@@ -137,8 +239,9 @@ class App extends PureComponent {
     }
   }
   onResultChanged = (data) => {
+    // TODO: 記録一覧からの再生
     this.setState({
-      currentData: data
+      currentData: this.capitalize(data)
     });
   }
   onResultRemove = (data) => {
@@ -152,17 +255,50 @@ class App extends PureComponent {
       throw new Error('onResultRemove: cannot find specified data.');
     }
   }
+  onOptionChange = (e) => {
+    const {name, value} = e.target.previousElementSibling;
+    if (value === 'on') { // checkbox
+      console.dir({...this.state.options, [name]: value});
+      this.setState({
+        options: {...this.state.options, [name]: !this.state.options[name]}
+      });
+    } else { // radio
+      console.dir({...this.state.options, [name]: value});
+      this.setState({
+        options: {...this.state.options, [name]: value}
+      });
+    }
+  }
+  capitalize = (data) => {
+    return data.map(d => ({...d, key: d.key.toUpperCase()}));
+  }
+
   render() {
-    // <ChartExample data={testData} />
+    const {
+      onDataChanged,
+      onResultChanged,
+      onResultRemove,
+      onOptionChange,
+      capitalize,
+      state
+    } = this;
+
     return (
       <div className="App">
         <Header title={APP_NAME} />
-
-        <Game word={words.atoz} onDataChanged={this.onDataChanged} />
-        <Chart.TWChart data={this.state.currentData} />
-        <ResultList results={this.state.results}
-                    onResultChanged={this.onResultChanged}
-                    onResultRemove={this.onResultRemove} />
+        <Option options={state.options} onChange={onOptionChange} />
+        <Game word={words.atoz} onDataChanged={onDataChanged} />
+        <RealtimeChart
+          data={capitalize(state.currentData)}
+          type={state.options.realtimeChart}
+          width={770}
+          option={{
+            target: 1000
+          }}
+        />
+        <ResultList results={state.results}
+                    onResultChanged={onResultChanged}
+                    onResultRemove={onResultRemove} />
 
         <ChartExample data={testData} />
       </div>

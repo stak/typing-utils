@@ -41,11 +41,19 @@ export class TimelineChart extends PureComponent {
       return prev;
     }, {});
 
+    const {
+      width,
+      height,
+      margin,
+      domain,
+      tickCount,
+    } = this.props;
+    // to fix domain: <XAxis  domain={[0, 2000]}>
 
     return (
-      <BarChart data={[flatData]} layout="vertical" width={1000} height={100} barCategoryGap="4" margin={{top: 15, right: 5, bottom: 5, left: 64}}>
+      <BarChart data={[flatData]} layout="vertical" width={width} height={height} barCategoryGap="4" margin={{top: 15, right: 24, bottom: 5, left: 24, ...margin}}>
         <YAxis type="category" hide={true} />
-        <XAxis type="number" allowDecimals={false} tickCount={10} />
+        <XAxis type="number" domain={domain} allowDataOverflow={false} allowDecimals={false} tickCount={tickCount + 1} minTickGap={0} />
         <CartesianGrid horizontal={false} stroke="#ccc" strokeDasharray="5 5" />
         {
           // TODO: 色
