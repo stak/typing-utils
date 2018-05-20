@@ -6,7 +6,7 @@ export class Option extends PureComponent {
     const { options } = this.props;
 
     const chart = {};
-    ['None', 'Bar', 'Timeline', 'Heatmap', 'Diff', 'Speed'].forEach(e => {
+    ['None', 'Bar', 'Timeline', 'Gantt', 'Heatmap', 'Diff', 'Speed'].forEach(e => {
       chart[e] = options.realtimeChart === e;
     });
 
@@ -24,6 +24,7 @@ export class Option extends PureComponent {
           <input type="radio" name="realtimeChart" id="chartNone" value="None" checked={chart.None} /><label htmlFor="chartNone" className="radio" onClick={handler}>None</label>
           <input type="radio" name="realtimeChart" id="chartBar" value="Bar" checked={chart.Bar} /><label htmlFor="chartBar" className="radio" onClick={handler}>Bar</label>
           <input type="radio" name="realtimeChart" id="chartTimeline" value="Timeline" checked={chart.Timeline} /><label htmlFor="chartTimeline" className="radio" onClick={handler}>Timeline</label>
+          <input type="radio" name="realtimeChart" id="chartGantt" value="Gantt" checked={chart.Gantt} /><label htmlFor="chartGantt" className="radio" onClick={handler}>Gantt</label>
           <input type="radio" name="realtimeChart" id="chartHeatmap" value="Heatmap" checked={chart.Heatmap} /><label htmlFor="chartHeatmap" className="radio" onClick={handler}>Heatmap</label>
           <input type="radio" name="realtimeChart" id="chartDiff" value="Diff" checked={chart.Diff} /><label htmlFor="chartDiff" className="radio" onClick={handler}>Diff</label>
           <input type="radio" name="realtimeChart" id="chartSpeed" value="Speed" checked={chart.Speed} /><label htmlFor="chartSpeed" className="radio" onClick={handler}>Speed</label>

@@ -112,6 +112,9 @@ class RealtimeChart extends PureComponent {
 
     let chart;
     switch (type) {
+      case 'None':
+        chart = null;
+        break;
       case 'Speed':
         chart = <Chart.SpeedChart
           data={data} width={w} height={h} margin={{left: -8, right: 30}}
@@ -257,17 +260,18 @@ class App extends PureComponent {
   }
   onOptionChange = (e) => {
     const {name, value} = e.target.previousElementSibling;
+    let newOptions;
+
     if (value === 'on') { // checkbox
-      console.dir({...this.state.options, [name]: value});
-      this.setState({
-        options: {...this.state.options, [name]: !this.state.options[name]}
-      });
+      newOptions = {...this.state.options, [name]: !this.state.options[name]};
     } else { // radio
-      console.dir({...this.state.options, [name]: value});
-      this.setState({
-        options: {...this.state.options, [name]: value}
-      });
+      newOptions = {...this.state.options, [name]: value};
     }
+
+    store.set('options', newOptions);
+    this.setState({
+      options: newOptions
+    });
   }
   capitalize = (data) => {
     return data.map(d => ({...d, key: d.key.toUpperCase()}));
@@ -287,7 +291,7 @@ class App extends PureComponent {
       <div className="App">
         <Header title={APP_NAME} />
         <Option options={state.options} onChange={onOptionChange} />
-        <Game word={words.atoz} onDataChanged={onDataChanged} />
+        <Game options={state.options} word={words.atoz} onDataChanged={onDataChanged} />
         <RealtimeChart
           data={capitalize(state.currentData)}
           type={state.options.realtimeChart}
@@ -299,8 +303,6 @@ class App extends PureComponent {
         <ResultList results={state.results}
                     onResultChanged={onResultChanged}
                     onResultRemove={onResultRemove} />
-
-        <ChartExample data={testData} />
       </div>
     );
   }

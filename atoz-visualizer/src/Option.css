@@ -47,14 +47,8 @@ input[type=radio], input[type=checkbox] {
   vertical-align: middle;
   cursor: pointer;
 }
-.radio:hover {
-
-}
 .checkbox:hover {
   background-color: #f6f7f8;
-}
-.radio:hover:after {
-
 }
 .checkbox:hover:after {
   border-color: darkslategray;
