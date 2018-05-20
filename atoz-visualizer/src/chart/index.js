@@ -2,7 +2,7 @@ import {GanttChart} from './GanttChart';
 import {TimelineChart} from './TimelineChart';
 import {StackBarChart} from './StackBarChart';
 import {DiffChart} from './DiffChart';
-import {TWChart} from './TWChart';
+import {SpeedChart} from './SpeedChart';
 import {Heatmap} from './Heatmap';
 import {mapColor} from './util';
 
@@ -11,7 +11,7 @@ export default {
   TimelineChart,
   StackBarChart,
   DiffChart,
-  TWChart,
+  SpeedChart,
   Heatmap,
 
   mapColor,

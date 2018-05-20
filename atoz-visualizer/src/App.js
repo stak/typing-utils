@@ -34,9 +34,9 @@ class ChartExample extends PureComponent {
       <div>
         <h2 className="Chart-title">TW</h2>
         <h3 className="Chart-subtitle">Clone style</h3>
-        <Chart.TWChart data={data} useRank={true} kpmRange="5" tickCount={3} />
+        <Chart.SpeedChart data={data} useRank={true} kpmRange="5" tickCount={3} />
         <h3 className="Chart-subtitle">Numeric style</h3>
-        <Chart.TWChart data={data} useRank={false} kpmRange="5" domain={[0, 'auto']} />
+        <Chart.SpeedChart data={data} useRank={false} kpmRange="5" domain={[0, 'auto']} />
 
         <h2 className="Chart-title">Gantt</h2>
         <Chart.GanttChart data={data} />
@@ -112,8 +112,8 @@ class RealtimeChart extends PureComponent {
 
     let chart;
     switch (type) {
-      case 'TW':
-        chart = <Chart.TWChart
+      case 'Speed':
+        chart = <Chart.SpeedChart
           data={data} width={w} height={h} margin={{left: -8, right: 30}}
           kpmRange={4}
           useRank={true}
