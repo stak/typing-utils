@@ -89,7 +89,8 @@ export class Game extends PureComponent {
   handleInitialKey = (key) => {
     const { word } = this.props;
 
-    if (key === word[0] && key !== word[this.state.pos]) {
+    if (this.props.options.quickRetry &&
+        key === word[0] && key !== word[this.state.pos]) {
       this.reset();
       return true;
     }
@@ -185,14 +186,18 @@ export class Game extends PureComponent {
       this.pressingKeysToPos[key] = pos;
 
       if (pos === data.length - 1) {
-        howl.finish.play();
+        this.props.options.seFinish && howl.finish.play();
       } else {
-        howl.pi.play();
+        this.props.options.seCorrect && howl.pi.play();
       }
     } else {
       // typo
       this.updateMiss(pos);
-      howl.miss.play();
+      this.props.options.seMiss && howl.miss.play();
+
+      if (this.props.options.stopOnMiss) {
+        this.reset();
+      }
     }
   }
 

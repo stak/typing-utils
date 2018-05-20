@@ -129,9 +129,9 @@ class App extends PureComponent {
         realtimeChart: 'Bar',
         quickRetry: true,
         stopOnMiss: false,
-        seCorrect: 'pi',
-        seMiss: 'miss',
-        seFinish: 'finish',
+        seCorrect: true, // TODO: sound select
+        seMiss: true,
+        seFinish: true,
       })
     }
 
