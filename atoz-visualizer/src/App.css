@@ -1,51 +1,53 @@
 .App {
   background-color: white;
-  margin-right: 200px;
+  margin: 0 200px 0 0;
+  padding: 0;
 }
 
 .App-header {
   position: sticky;
+  z-index: 1;
   top: 0;
   left: 0;
-  background-color: darkslategray;
-  padding: 0 30px;
+  margin: 0;
+  padding: 1px 30px;
+  line-height: 0.7;
+  font-size: 28px;
+  font-family: Arial, Helvetica, sans-serif;
   color: white;
-  height: 42px;
-  overflow: hidden;
-  z-index: 1;
-}
-
-.App-header::after {
-  content: '';
-  position: absolute;
-  top: 20px;
-  left: 0;
-  width: 600px;
-  display: block;
-  border: 0;
-  border-top: 3px solid darkslategray;
-}
-
-.App-title::before {
-  content: '';
-  position: absolute;
-  top: 0px;
-  left: 120%;
-  width: 300%;
-  height: 64px;
-  transform-origin: left top;
-  transform: skewX(-30deg);
-  display: block;
-  background-color: white;
 }
 
 .App-title {
-  position: absolute;
-  top: -20px;
-  left: 0;
-  font-size: 3.5em;
   margin: 0;
   padding: 0;
+  white-space: nowrap;
+}
+
+/* middle line */
+.App-header::after {
+  content: '';
+  position: absolute;
+  top: 18px;
+  left: -20px;
+  width: 600px;
+  display: block;
+  border: 0;
+  border-top: 2px solid darkslategray;
+}
+
+/* clipping */
+.App-title::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 600px;
+  height: 100%;
+  transform-origin: left top;
+  transform: skewX(-30deg);
+  display: block;
+  background-color: darkslategray;
+  z-index: -1;
 }
 
 .Chart-title {
