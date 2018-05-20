@@ -187,7 +187,7 @@ export class Game extends PureComponent {
       if (pos === data.length - 1) {
         howl.finish.play();
       } else {
-        howl.pi.play();1
+        howl.pi.play();
       }
     } else {
       // typo
@@ -214,6 +214,10 @@ export class Game extends PureComponent {
       delete this.pressingKeysToPos[e.key];
     }
     e.preventDefault();
+  }
+
+  componentDidMount = () => {
+    this.eventElement.focus();
   }
 
   render() {
